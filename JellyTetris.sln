@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34024.191
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JellyTetris.Core", "JellyTetris.Core\JellyTetris.Core.csproj", "{59975B06-F151-415C-9316-D39478C0D7EF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{E7B3318E-5D2D-4DF2-9ACE-CDB823A42504}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoftBodyPhysics", "..\SoftBodyPhysics\SoftBodyPhysics\SoftBodyPhysics.csproj", "{BA7AD9DD-032A-45DA-803D-3956A39D29A9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DependencyInjection", "..\DependencyInjection\DependencyInjection\DependencyInjection.csproj", "{75847927-3E3E-400B-85C9-4F03140ADA79}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JellyTetris.Windows", "JellyTetris.Windows\JellyTetris.Windows.csproj", "{2B7A1479-FB2E-44F6-AD5B-F05E570DD790}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProfilerApp", "ProfilerApp\ProfilerApp.csproj", "{10D963B3-CB99-4546-8AB9-1EA145EB5390}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{59975B06-F151-415C-9316-D39478C0D7EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59975B06-F151-415C-9316-D39478C0D7EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59975B06-F151-415C-9316-D39478C0D7EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59975B06-F151-415C-9316-D39478C0D7EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA7AD9DD-032A-45DA-803D-3956A39D29A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA7AD9DD-032A-45DA-803D-3956A39D29A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA7AD9DD-032A-45DA-803D-3956A39D29A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA7AD9DD-032A-45DA-803D-3956A39D29A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75847927-3E3E-400B-85C9-4F03140ADA79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75847927-3E3E-400B-85C9-4F03140ADA79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75847927-3E3E-400B-85C9-4F03140ADA79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75847927-3E3E-400B-85C9-4F03140ADA79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B7A1479-FB2E-44F6-AD5B-F05E570DD790}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B7A1479-FB2E-44F6-AD5B-F05E570DD790}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B7A1479-FB2E-44F6-AD5B-F05E570DD790}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B7A1479-FB2E-44F6-AD5B-F05E570DD790}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10D963B3-CB99-4546-8AB9-1EA145EB5390}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10D963B3-CB99-4546-8AB9-1EA145EB5390}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10D963B3-CB99-4546-8AB9-1EA145EB5390}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10D963B3-CB99-4546-8AB9-1EA145EB5390}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BA7AD9DD-032A-45DA-803D-3956A39D29A9} = {E7B3318E-5D2D-4DF2-9ACE-CDB823A42504}
+		{75847927-3E3E-400B-85C9-4F03140ADA79} = {E7B3318E-5D2D-4DF2-9ACE-CDB823A42504}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F9944D6E-63E3-4515-B31C-991ECB39ABF5}
+	EndGlobalSection
+EndGlobal

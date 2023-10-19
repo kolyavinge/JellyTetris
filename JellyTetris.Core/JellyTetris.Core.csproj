@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>netstandard2.1</TargetFramework>
+		<Nullable>enable</Nullable>
+		<LangVersion>preview</LangVersion>
+		<RootNamespace>JellyTetris</RootNamespace>
+	</PropertyGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\..\DependencyInjection\DependencyInjection\DependencyInjection.csproj" />
+	  <ProjectReference Include="..\..\SoftBodyPhysics\SoftBodyPhysics\SoftBodyPhysics.csproj" />
+	</ItemGroup>
+</Project>

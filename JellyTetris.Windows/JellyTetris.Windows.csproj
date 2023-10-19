@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net7.0-windows</TargetFramework>
+		<Nullable>enable</Nullable>
+		<LangVersion>preview</LangVersion>
+		<UseWPF>true</UseWPF>
+	</PropertyGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\DependencyInjection\DependencyInjection\DependencyInjection.csproj" />
+		<ProjectReference Include="..\JellyTetris.Core\JellyTetris.Core.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<Folder Include="Utils\" />
+	</ItemGroup>
+</Project>

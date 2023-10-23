@@ -48,9 +48,9 @@ internal class Game : IGame
     private void InitUnits()
     {
         _physicsWorld.Units.Time = 0.1f;
-        _physicsWorld.Units.SpringStiffness = 400.0f;
-        _physicsWorld.Units.SpringDamper = 25f;
-        _physicsWorld.Units.Sliding = 0.8f;
+        _physicsWorld.Units.SpringStiffness = 250.0f;
+        _physicsWorld.Units.SpringDamper = 15f;
+        _physicsWorld.Units.Sliding = 0.9f;
     }
 
     private void MakeFieldEdges()

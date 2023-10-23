@@ -6,13 +6,13 @@ namespace JellyTetris.Windows.Rendering;
 
 internal static class ShapeColors
 {
-    public static readonly Color CubeColor = new Color { A = 255, R = 148, G = 0, B = 37 };
+    public static readonly Color CubeColor = new Color { A = 255, R = 148, G = 0, B = 52 };
     public static readonly Color LineColor = new Color { A = 255, R = 91, G = 0, B = 148 };
     public static readonly Color TColor = new Color { A = 255, R = 148, G = 94, B = 0 };
-    public static readonly Color L1Color = new Color { A = 255, R = 0, G = 106, B = 148 };
-    public static readonly Color L2Color = new Color { A = 255, R = 0, G = 148, B = 131 };
-    public static readonly Color S1Color = new Color { A = 255, R = 0, G = 148, B = 2 };
-    public static readonly Color S2Color = new Color { A = 255, R = 109, G = 148, B = 0 };
+    public static readonly Color L1Color = new Color { A = 255, R = 0, G = 84, B = 148 };
+    public static readonly Color L2Color = new Color { A = 255, R = 0, G = 148, B = 113 };
+    public static readonly Color S1Color = new Color { A = 255, R = 10, G = 148, B = 0 };
+    public static readonly Color S2Color = new Color { A = 255, R = 146, G = 148, B = 0 };
 
     public static readonly Brush CubeBrush = new SolidColorBrush(CubeColor);
     public static readonly Brush LineBrush = new SolidColorBrush(LineColor);

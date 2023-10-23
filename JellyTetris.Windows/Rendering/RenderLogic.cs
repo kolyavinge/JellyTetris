@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Windows.Media;
+﻿using System.Windows.Media;
 using JellyTetris.Core;
 
 namespace JellyTetris.Windows.Rendering;
@@ -12,10 +11,17 @@ internal class RenderLogic : IRenderLogic
     {
         foreach (var shape in game.Shapes)
         {
-            var start = new System.Windows.Point(shape.EdgePoints[0].Position.X, actualHeight - shape.EdgePoints[0].Position.Y);
-            var segments = shape.EdgePoints.Skip(1).Select(p => new LineSegment(new(p.Position.X, actualHeight - p.Position.Y), true)).ToList();
-            var figure = new PathFigure(start, segments, true);
-            var geo = new PathGeometry(new[] { figure });
+            var geo = new StreamGeometry();
+            using (var ctx = geo.Open())
+            {
+                var edgePoints = shape.EdgePoints;
+                ctx.BeginFigure(new(edgePoints[0].Position.X, actualHeight - edgePoints[0].Position.Y), true, true);
+                for (var i = 1; i < edgePoints.Length; i++)
+                {
+                    ctx.LineTo(new(edgePoints[i].Position.X, actualHeight - edgePoints[i].Position.Y), true, false);
+                }
+            }
+            geo.Freeze();
             dc.DrawGeometry(ShapeColors.GetBrush(shape.Kind), _pen, geo);
         }
     }

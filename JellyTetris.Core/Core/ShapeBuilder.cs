@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using SoftBodyPhysics.Ancillary;
-using SoftBodyPhysics.Geo;
+using SoftBodyPhysics.Calculations;
 using SoftBodyPhysics.Model;
 
 namespace JellyTetris.Core;

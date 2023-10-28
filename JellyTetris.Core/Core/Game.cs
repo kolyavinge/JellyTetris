@@ -3,25 +3,17 @@ using SoftBodyPhysics.Core;
 
 namespace JellyTetris.Core;
 
-public interface IGame
-{
-    IShape CurrentShape { get; }
-    IShape NextShape { get; }
-    IReadOnlyCollection<IShape> Shapes { get; }
-    void Update();
-    void MoveCurrentShapeLeft();
-    void MoveCurrentShapeRight();
-    void DropCurrentShape();
-    void RotateCurrentShape();
-}
-
 internal class Game : IGame
 {
     private readonly IPhysicsWorld _physicsWorld;
     private readonly IShapeGenerator _shapeGenerator;
-    private readonly List<IShape> _shapes;
+    private readonly IShapeMovingLogic _shapeMovingLogic;
+    private readonly IShapeRotationLogic _shapeRotationLogic;
+    private readonly List<IShapeInternal> _shapes;
+    private IShapeInternal _currentShape;
+    private GameState _state;
 
-    public IShape CurrentShape { get; private set; }
+    public IShape CurrentShape => _currentShape;
 
     public IShape NextShape { get; private set; }
 
@@ -29,77 +21,71 @@ internal class Game : IGame
 
     public Game(
         IPhysicsWorld physicsWorld,
-        IShapeGenerator shapeGenerator)
+        IGameInitializer gameInitializer,
+        IShapeGenerator shapeGenerator,
+        IShapeMovingLogic shapeMovingLogic,
+        IShapeRotationLogic shapeRotationLogic)
     {
         _physicsWorld = physicsWorld;
         _shapeGenerator = shapeGenerator;
-        InitWorld();
-        CurrentShape = _shapeGenerator.GetRandomShape();
+        _shapeMovingLogic = shapeMovingLogic;
+        _shapeRotationLogic = shapeRotationLogic;
+        gameInitializer.Init();
+        _currentShape = _shapeGenerator.GetRandomShape();
         //NextShape = _shapeGenerator.GetRandomShape();
-        _shapes = new List<IShape> { CurrentShape };
-    }
-
-    private void InitWorld()
-    {
-        InitUnits();
-        MakeFieldEdges();
-    }
-
-    private void InitUnits()
-    {
-        _physicsWorld.Units.Time = 0.1f;
-        _physicsWorld.Units.SpringStiffness = 250.0f;
-        _physicsWorld.Units.SpringDamper = 15f;
-        _physicsWorld.Units.Sliding = 0.9f;
-    }
-
-    private void MakeFieldEdges()
-    {
-        var width = GameConstants.FieldWidth * GameConstants.PieceSize;
-        var delta = 1;
-
-        var editor = _physicsWorld.MakEditor();
-
-        var hardBody = editor.AddHardBody();
-        editor.AddEdge(hardBody, new(-delta, 0), new(width + delta, 0));
-        editor.Complete();
-
-        hardBody = editor.AddHardBody();
-        editor.AddEdge(hardBody, new(-delta, 0), new(-delta, 10000));
-        editor.Complete();
-
-        hardBody = editor.AddHardBody();
-        editor.AddEdge(hardBody, new(width + delta, 0), new(width + delta, 10000));
-        editor.Complete();
+        _shapes = new List<IShapeInternal> { _currentShape };
+        _state = GameState.Default;
     }
 
     public void Update()
     {
-        _physicsWorld.Update();
-        if (!CurrentShape.IsMoving)
+        if (_state == GameState.Default)
         {
-            CurrentShape = _shapeGenerator.GetRandomShape();
-            _shapes.Add(CurrentShape);
+            _currentShape.ForAllPoints(p => p.Velocity = new(0, -5));
         }
+        else if (_state == GameState.DropShape)
+        {
+            if (!_currentShape.IsMoving)
+            {
+                _currentShape = _shapeGenerator.GetRandomShape();
+                _shapes.Add(_currentShape);
+                _state = GameState.Default;
+            }
+        }
+
+        _physicsWorld.Update();
     }
 
     public void MoveCurrentShapeLeft()
     {
-
+        if (_state == GameState.Default)
+        {
+            _shapeMovingLogic.MoveLeft(_currentShape);
+        }
     }
 
     public void MoveCurrentShapeRight()
     {
-
+        if (_state == GameState.Default)
+        {
+            _shapeMovingLogic.MoveRight(_currentShape);
+        }
     }
 
     public void DropCurrentShape()
     {
-
+        if (_state == GameState.Default)
+        {
+            _currentShape.ForAllPoints(p => p.Velocity = new(0, -15));
+            _state = GameState.DropShape;
+        }
     }
 
     public void RotateCurrentShape()
     {
-
+        if (_state == GameState.Default)
+        {
+            _shapeRotationLogic.Rotate(_currentShape);
+        }
     }
 }

@@ -9,9 +9,10 @@
         Title="MainWindow"
         WindowStartupLocation="CenterScreen"
         Height="800"
-        Width="1000">
+        Width="1000"
+        KeyDown="OnKeyDown">
     <Grid>
-        <TextBlock x:Name="ModelingTextBlock" Foreground="Gray" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <TextBlock x:Name="ModelingTextBlock" Foreground="Red" HorizontalAlignment="Left" VerticalAlignment="Top" />
         <local:FieldGrid x:Name="_fieldGrid" Background="#181b1c" />
     </Grid>
 </Window>

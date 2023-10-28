@@ -1,4 +1,4 @@
-﻿using SoftBodyPhysics.Geo;
+﻿using SoftBodyPhysics.Calculations;
 
 namespace JellyTetris.Core;
 

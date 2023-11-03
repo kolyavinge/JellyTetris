@@ -76,7 +76,7 @@ internal class Game : IGame
     {
         if (_state == GameState.Default)
         {
-            _currentShape.ForAllPoints(p => p.Velocity = new(0, -15));
+            _currentShape.ForAllPoints(p => p.Velocity = new(0, -10));
             _state = GameState.DropShape;
         }
     }

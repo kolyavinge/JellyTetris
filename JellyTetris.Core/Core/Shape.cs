@@ -67,7 +67,7 @@ internal class Shape : IShapeInternal
         get
         {
             var v = SoftBody.MassPoints.Sum(m => m.Velocity.Length);
-            return v > 20;
+            return v > 50;
         }
     }
 

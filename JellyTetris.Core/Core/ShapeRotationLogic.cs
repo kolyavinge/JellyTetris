@@ -21,6 +21,8 @@ internal class ShapeRotationLogic : IShapeRotationLogic
 
     public void Rotate(IShapeInternal shape)
     {
+        if (!shape.Rotated) return;
+
         var offset = shape.SoftBody.MiddlePoint - shape.InitMiddlePoint;
 
         var points = shape.InitMassPoints

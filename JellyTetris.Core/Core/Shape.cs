@@ -42,6 +42,8 @@ internal interface IShapeInternal : IShape
     Vector InitMiddlePoint { get; }
 
     float CurrentAngle { get; set; }
+
+    bool Rotated { get; }
 }
 
 internal class Shape : IShapeInternal
@@ -61,6 +63,8 @@ internal class Shape : IShapeInternal
     public Vector InitMiddlePoint { get; }
 
     public float CurrentAngle { get; set; }
+
+    public bool Rotated => Kind != ShapeKind.Cube;
 
     public bool IsMoving
     {

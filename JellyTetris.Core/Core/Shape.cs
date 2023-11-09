@@ -16,8 +16,6 @@ public interface IShape
 
     IEnumerable<IShapeLine> Lines { get; }
 
-    bool IsMoving { get; }
-
     void ForAllPoints(Action<IMassPoint> action);
 }
 
@@ -43,7 +41,7 @@ internal interface IShapeInternal : IShape
 
     float CurrentAngle { get; set; }
 
-    bool Rotated { get; }
+    bool IsRotateEnable { get; }
 }
 
 internal class Shape : IShapeInternal
@@ -64,16 +62,7 @@ internal class Shape : IShapeInternal
 
     public float CurrentAngle { get; set; }
 
-    public bool Rotated => Kind != ShapeKind.Cube;
-
-    public bool IsMoving
-    {
-        get
-        {
-            var v = SoftBody.MassPoints.Sum(m => m.Velocity.Length);
-            return v > 50;
-        }
-    }
+    public bool IsRotateEnable => Kind != ShapeKind.Cube;
 
     public Shape(ShapeKind kind, ISoftBody softBody, IEnumerable<IMassPoint> edgePoints)
     {

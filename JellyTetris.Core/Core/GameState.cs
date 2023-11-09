@@ -1,7 +1,8 @@
 ﻿namespace JellyTetris.Core;
 
-internal enum GameState
+public enum GameState
 {
     Default,
-    DropShape
+    DropShape,
+    Over
 }

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using SoftBodyPhysics.Core;
 
 namespace JellyTetris.Core;
@@ -9,9 +11,12 @@ internal class Game : IGame
     private readonly IShapeGenerator _shapeGenerator;
     private readonly IShapeMovingLogic _shapeMovingLogic;
     private readonly IShapeRotationLogic _shapeRotationLogic;
+    private readonly IShapeCollisionChecker _shapeCollisionChecker;
     private readonly List<IShapeInternal> _shapes;
     private IShapeInternal _currentShape;
-    private GameState _state;
+    private DateTime _dropShapeTimestamp;
+
+    public GameState State { get; private set; }
 
     public IShape CurrentShape => _currentShape;
 
@@ -24,41 +29,60 @@ internal class Game : IGame
         IGameInitializer gameInitializer,
         IShapeGenerator shapeGenerator,
         IShapeMovingLogic shapeMovingLogic,
-        IShapeRotationLogic shapeRotationLogic)
+        IShapeRotationLogic shapeRotationLogic,
+        IShapeCollisionChecker shapeCollisionChecker)
     {
         _physicsWorld = physicsWorld;
         _shapeGenerator = shapeGenerator;
         _shapeMovingLogic = shapeMovingLogic;
         _shapeRotationLogic = shapeRotationLogic;
+        _shapeCollisionChecker = shapeCollisionChecker;
         gameInitializer.Init();
         _currentShape = _shapeGenerator.GetRandomShape();
         //NextShape = _shapeGenerator.GetRandomShape();
         _shapes = new List<IShapeInternal> { _currentShape };
-        _state = GameState.Default;
+        State = GameState.Default;
     }
 
     public void Update()
     {
-        if (_state == GameState.Default)
+        if (State == GameState.Default)
         {
             _currentShape.ForAllPoints(p => p.Velocity = new(0, -5));
         }
-        else if (_state == GameState.DropShape)
+        else if (State == GameState.DropShape)
         {
-            if (!_currentShape.IsMoving)
+            if ((DateTime.Now - _dropShapeTimestamp).TotalSeconds >= 2)
             {
                 _currentShape = _shapeGenerator.GetRandomShape();
                 _shapes.Add(_currentShape);
-                _state = GameState.Default;
+                State = GameState.Default;
             }
         }
+        else if (State == GameState.Over) return;
 
         _physicsWorld.Update();
+
+        if (State == GameState.Default)
+        {
+            if (_shapeCollisionChecker.IsShapeCollided(_currentShape))
+            {
+                if (IsOver())
+                {
+                    State = GameState.Over;
+                }
+                else
+                {
+                    State = GameState.DropShape;
+                    _dropShapeTimestamp = DateTime.Now;
+                }
+            }
+        }
     }
 
     public void MoveCurrentShapeLeft()
     {
-        if (_state == GameState.Default)
+        if (State == GameState.Default)
         {
             _shapeMovingLogic.MoveLeft(_currentShape);
         }
@@ -66,7 +90,7 @@ internal class Game : IGame
 
     public void MoveCurrentShapeRight()
     {
-        if (_state == GameState.Default)
+        if (State == GameState.Default)
         {
             _shapeMovingLogic.MoveRight(_currentShape);
         }
@@ -74,18 +98,24 @@ internal class Game : IGame
 
     public void DropCurrentShape()
     {
-        if (_state == GameState.Default)
+        if (State == GameState.Default)
         {
             _currentShape.ForAllPoints(p => p.Velocity = new(0, -10));
-            _state = GameState.DropShape;
+            State = GameState.DropShape;
+            _dropShapeTimestamp = DateTime.Now;
         }
     }
 
     public void RotateCurrentShape()
     {
-        if (_state == GameState.Default)
+        if (State == GameState.Default)
         {
             _shapeRotationLogic.Rotate(_currentShape);
         }
+    }
+
+    private bool IsOver()
+    {
+        return _shapes.SelectMany(x => x.SoftBody.MassPoints).Max(x => x.Position.Y) > GameConstants.FieldHeight * GameConstants.PieceSize;
     }
 }

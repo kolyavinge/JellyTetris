@@ -7,7 +7,7 @@ internal class DebugRenderLogic : IRenderLogic
 {
     private readonly Pen _axisPen = new(Brushes.DimGray, 0.1);
 
-    public void Render(DrawingContext dc, IGame game, double actualHeight)
+    public void Render(DrawingContext dc, IGame game, double actualWidth, double actualHeight)
     {
         for (int i = 1; i < GameConstants.FieldWidth; i++)
         {

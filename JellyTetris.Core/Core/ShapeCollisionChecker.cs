@@ -20,7 +20,8 @@ internal class MovedPoint
 
 internal interface IShapeCollisionChecker
 {
-    bool IsCollided(IShapeInternal shape, IReadOnlyCollection<MovedPoint> points);
+    bool IsShapeCollided(IShapeInternal shape);
+    bool AreMovedPointsCollided(IShapeInternal shape, IReadOnlyCollection<MovedPoint> points);
 }
 
 internal class ShapeCollisionChecker : IShapeCollisionChecker
@@ -32,7 +33,12 @@ internal class ShapeCollisionChecker : IShapeCollisionChecker
         _physicsWorld = physicsWorld;
     }
 
-    public bool IsCollided(IShapeInternal shape, IReadOnlyCollection<MovedPoint> points)
+    public bool IsShapeCollided(IShapeInternal shape)
+    {
+        return _physicsWorld.IsCollidedToAnySoftBody(shape.SoftBody) || _physicsWorld.IsCollidedToAnyHardBody(shape.SoftBody);
+    }
+
+    public bool AreMovedPointsCollided(IShapeInternal shape, IReadOnlyCollection<MovedPoint> points)
     {
         return IsCollidedInField(points) || IsCollidedInShape(shape, points);
     }

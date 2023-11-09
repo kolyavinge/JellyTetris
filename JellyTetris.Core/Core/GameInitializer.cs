@@ -26,7 +26,7 @@ internal class GameInitializer : IGameInitializer
     private void InitUnits()
     {
         _physicsWorld.Units.Time = 0.1f;
-        _physicsWorld.Units.SpringStiffness = 60.0f;
+        _physicsWorld.Units.SpringStiffness = 120.0f;
         _physicsWorld.Units.SpringDamper = 30f;
         _physicsWorld.Units.Sliding = 0.8f;
     }

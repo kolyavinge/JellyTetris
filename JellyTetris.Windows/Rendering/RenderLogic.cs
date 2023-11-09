@@ -1,4 +1,6 @@
-﻿using System.Windows.Media;
+﻿using System.Globalization;
+using System.Windows;
+using System.Windows.Media;
 using JellyTetris.Core;
 
 namespace JellyTetris.Windows.Rendering;
@@ -8,7 +10,7 @@ internal class RenderLogic : IRenderLogic
     private readonly Pen _axisPen = new(Brushes.DimGray, 0.1);
     private readonly Pen _shapeBorderPen = new(Brushes.Black, 1.0);
 
-    public void Render(DrawingContext dc, IGame game, double actualHeight)
+    public void Render(DrawingContext dc, IGame game, double actualWidth, double actualHeight)
     {
         for (int i = 1; i < GameConstants.FieldWidth; i++)
         {
@@ -34,6 +36,17 @@ internal class RenderLogic : IRenderLogic
             }
             geo.Freeze();
             dc.DrawGeometry(ShapeColors.GetBrush(shape.Kind), _shapeBorderPen, geo);
+        }
+
+        if (game.State == GameState.Over)
+        {
+            var text = new FormattedText(
+                "GAME\nOVER", CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new(new("Consolas"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal), 120.0, Brushes.Black);
+            dc.DrawText(text, new((actualWidth - text.Width) / 2.0 + 4.0, (actualHeight - text.Height) / 2.0 + 4.0));
+
+            text = new FormattedText(
+                "GAME\nOVER", CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new(new("Consolas"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal), 120.0, Brushes.DarkGray);
+            dc.DrawText(text, new((actualWidth - text.Width) / 2.0, (actualHeight - text.Height) / 2.0));
         }
     }
 }

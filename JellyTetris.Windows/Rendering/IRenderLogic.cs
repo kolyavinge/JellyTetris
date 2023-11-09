@@ -5,5 +5,5 @@ namespace JellyTetris.Windows.Rendering;
 
 internal interface IRenderLogic
 {
-    void Render(DrawingContext dc, IGame game, double actualHeight);
+    void Render(DrawingContext dc, IGame game, double actualWidth, double actualHeight);
 }

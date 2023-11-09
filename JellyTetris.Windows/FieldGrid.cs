@@ -22,6 +22,6 @@ internal class FieldGrid : Grid
     protected override void OnRender(DrawingContext dc)
     {
         base.OnRender(dc);
-        _renderLogic.Render(dc, Game!, ActualHeight);
+        _renderLogic.Render(dc, Game!, ActualWidth, ActualHeight);
     }
 }

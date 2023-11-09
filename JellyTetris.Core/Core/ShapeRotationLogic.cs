@@ -21,7 +21,7 @@ internal class ShapeRotationLogic : IShapeRotationLogic
 
     public void Rotate(IShapeInternal shape)
     {
-        if (!shape.Rotated) return;
+        if (!shape.IsRotateEnable) return;
 
         var offset = shape.SoftBody.MiddlePoint - shape.InitMiddlePoint;
 
@@ -29,7 +29,7 @@ internal class ShapeRotationLogic : IShapeRotationLogic
             .Select(x => new MovedPoint(x.MassPoint, GeoCalcs.RotatePoint(x.Position, shape.InitMiddlePoint, shape.CurrentAngle + _angleToRotate) + offset))
             .ToList();
 
-        if (!_shapeCollisionChecker.IsCollided(shape, points))
+        if (!_shapeCollisionChecker.AreMovedPointsCollided(shape, points))
         {
             points.ForEach(x => x.MassPoint.Position = x.MovedPosition);
             shape.CurrentAngle += _angleToRotate;

@@ -4,6 +4,8 @@ namespace JellyTetris.Core;
 
 public interface IGame
 {
+    GameState State { get; }
+
     IShape CurrentShape { get; }
 
     IShape NextShape { get; }

@@ -41,11 +41,11 @@ internal class RenderLogic : IRenderLogic
         if (game.State == GameState.Over)
         {
             var text = new FormattedText(
-                "GAME\nOVER", CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new(new("Consolas"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal), 120.0, Brushes.Black);
+                "GAME\nOVER", CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new(new("Consolas"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal), 120.0, Brushes.Black, 1.0);
             dc.DrawText(text, new((actualWidth - text.Width) / 2.0 + 4.0, (actualHeight - text.Height) / 2.0 + 4.0));
 
             text = new FormattedText(
-                "GAME\nOVER", CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new(new("Consolas"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal), 120.0, Brushes.DarkGray);
+                "GAME\nOVER", CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new(new("Consolas"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal), 120.0, Brushes.DarkGray, 1.0);
             dc.DrawText(text, new((actualWidth - text.Width) / 2.0, (actualHeight - text.Height) / 2.0));
         }
     }

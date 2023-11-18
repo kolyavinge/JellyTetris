@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using JellyTetris.Model;
 using SoftBodyPhysics.Core;
 
@@ -20,16 +21,16 @@ internal class ShapeFactory : IShapeFactory
 {
     private readonly IPhysicsWorld _physicsWorld;
     private readonly IShapeBuilder _shapeBuilder;
-    private readonly IShapeEdgeDetector _shapeEdgeDetector;
+    private readonly IShapePartBuilder _shapePartBuilder;
 
     public ShapeFactory(
         IPhysicsWorld physicsWorld,
         IShapeBuilder shapeBuilder,
-        IShapeEdgeDetector shapeEdgeDetector)
+        IShapePartBuilder shapePartBuilder)
     {
         _physicsWorld = physicsWorld;
         _shapeBuilder = shapeBuilder;
-        _shapeEdgeDetector = shapeEdgeDetector;
+        _shapePartBuilder = shapePartBuilder;
     }
 
     public Shape Make(ShapeKind shapeKind)
@@ -51,48 +52,48 @@ internal class ShapeFactory : IShapeFactory
     {
         var body = _shapeBuilder.StartPoint(GameConstants.FieldHeight, 4).MakeShape(new[] { (0, 0), (0, 1), (1, 1), (1, 0) }, _physicsWorld.MakeSoftBodyEditor());
 
-        return new(ShapeKind.Cube, body, _shapeEdgeDetector.GetEdgePoints(body));
+        return new(ShapeKind.Cube, body, _shapeBuilder.Pieces.ToArray(), _shapePartBuilder.GetParts(_shapeBuilder.Pieces).ToArray());
     }
 
     public Shape MakeLine()
     {
         var body = _shapeBuilder.StartPoint(GameConstants.FieldHeight, 4).MakeShape(new[] { (0, 0), (1, 0), (2, 0), (3, 0) }, _physicsWorld.MakeSoftBodyEditor());
 
-        return new(ShapeKind.Line, body, _shapeEdgeDetector.GetEdgePoints(body));
+        return new(ShapeKind.Line, body, _shapeBuilder.Pieces.ToArray(), _shapePartBuilder.GetParts(_shapeBuilder.Pieces).ToArray());
     }
 
     public Shape MakeT()
     {
         var body = _shapeBuilder.StartPoint(GameConstants.FieldHeight, 4).MakeShape(new[] { (0, 0), (0, 1), (0, 2), (1, 1) }, _physicsWorld.MakeSoftBodyEditor());
 
-        return new(ShapeKind.T, body, _shapeEdgeDetector.GetEdgePoints(body));
+        return new(ShapeKind.T, body, _shapeBuilder.Pieces.ToArray(), _shapePartBuilder.GetParts(_shapeBuilder.Pieces).ToArray());
     }
 
     public Shape MakeL1()
     {
         var body = _shapeBuilder.StartPoint(GameConstants.FieldHeight, 4).MakeShape(new[] { (2, 0), (1, 0), (0, 0), (0, 1) }, _physicsWorld.MakeSoftBodyEditor());
 
-        return new(ShapeKind.L1, body, _shapeEdgeDetector.GetEdgePoints(body));
+        return new(ShapeKind.L1, body, _shapeBuilder.Pieces.ToArray(), _shapePartBuilder.GetParts(_shapeBuilder.Pieces).ToArray());
     }
 
     public Shape MakeL2()
     {
         var body = _shapeBuilder.StartPoint(GameConstants.FieldHeight, 4).MakeShape(new[] { (2, 1), (1, 1), (0, 1), (0, 0) }, _physicsWorld.MakeSoftBodyEditor());
 
-        return new(ShapeKind.L2, body, _shapeEdgeDetector.GetEdgePoints(body));
+        return new(ShapeKind.L2, body, _shapeBuilder.Pieces.ToArray(), _shapePartBuilder.GetParts(_shapeBuilder.Pieces).ToArray());
     }
 
     public Shape MakeS1()
     {
         var body = _shapeBuilder.StartPoint(GameConstants.FieldHeight, 4).MakeShape(new[] { (2, 0), (1, 0), (1, 1), (0, 1) }, _physicsWorld.MakeSoftBodyEditor());
 
-        return new(ShapeKind.S1, body, _shapeEdgeDetector.GetEdgePoints(body));
+        return new(ShapeKind.S1, body, _shapeBuilder.Pieces.ToArray(), _shapePartBuilder.GetParts(_shapeBuilder.Pieces).ToArray());
     }
 
     public Shape MakeS2()
     {
         var body = _shapeBuilder.StartPoint(GameConstants.FieldHeight, 4).MakeShape(new[] { (2, 1), (1, 1), (1, 0), (0, 0) }, _physicsWorld.MakeSoftBodyEditor());
 
-        return new(ShapeKind.S2, body, _shapeEdgeDetector.GetEdgePoints(body));
+        return new(ShapeKind.S2, body, _shapeBuilder.Pieces.ToArray(), _shapePartBuilder.GetParts(_shapeBuilder.Pieces).ToArray());
     }
 }

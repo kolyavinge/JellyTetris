@@ -24,18 +24,20 @@ internal class RenderLogic : IRenderLogic
 
         foreach (var shape in game.Shapes)
         {
-            var geo = new StreamGeometry();
-            using (var ctx = geo.Open())
+            foreach (var part in shape.Parts)
             {
-                var edgePoints = shape.EdgePoints;
-                ctx.BeginFigure(new(edgePoints[0].X, actualHeight - edgePoints[0].Y), true, true);
-                for (var i = 1; i < edgePoints.Length; i++)
+                var geo = new StreamGeometry();
+                using (var ctx = geo.Open())
                 {
-                    ctx.LineTo(new(edgePoints[i].X, actualHeight - edgePoints[i].Y), true, false);
+                    ctx.BeginFigure(new(part.EdgePoints[0].X, actualHeight - part.EdgePoints[0].Y), true, true);
+                    for (var i = 1; i < part.EdgePoints.Length; i++)
+                    {
+                        ctx.LineTo(new(part.EdgePoints[i].X, actualHeight - part.EdgePoints[i].Y), true, false);
+                    }
                 }
+                geo.Freeze();
+                dc.DrawGeometry(ShapeColors.GetBrush(shape.Kind), _shapeBorderPen, geo);
             }
-            geo.Freeze();
-            dc.DrawGeometry(ShapeColors.GetBrush(shape.Kind), _shapeBorderPen, geo);
         }
 
         if (game.State == GameState.Over)

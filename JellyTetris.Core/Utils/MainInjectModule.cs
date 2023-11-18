@@ -14,6 +14,7 @@ internal class MainInjectModule : InjectModule
         bindingProvider.Bind<IShapeFactory, ShapeFactory>().ToSingleton();
         bindingProvider.Bind<IShapeGenerator, ShapeGenerator>().ToSingleton();
         bindingProvider.Bind<IShapeEdgeDetector, ShapeEdgeDetector>().ToSingleton();
+        bindingProvider.Bind<IShapePartBuilder, ShapePartBuilder>().ToSingleton();
         bindingProvider.Bind<IShapeMovingLogic, ShapeMovingLogic>().ToSingleton();
         bindingProvider.Bind<IShapeRotationLogic, ShapeRotationLogic>().ToSingleton();
         bindingProvider.Bind<IShapeCollisionChecker, ShapeCollisionChecker>().ToSingleton();

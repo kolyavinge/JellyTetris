@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JellyTetris.Model;
 using SoftBodyPhysics.Ancillary;
 using SoftBodyPhysics.Calculations;
 using SoftBodyPhysics.Model;
@@ -9,6 +10,7 @@ namespace JellyTetris.Core;
 
 internal interface IShapeBuilder
 {
+    List<ShapePiece> Pieces { get; set; }
     IShapeBuilder StartPoint(int row, int col);
     ISoftBody MakeShape(IReadOnlyCollection<(int row, int col)> shapeCoords, ISoftBodyEditor softBodyEditor);
 }
@@ -21,10 +23,13 @@ internal class ShapeBuilder : IShapeBuilder
     private ISoftBodyEditor? _softBodyEditor;
     private ISoftBody? _body;
 
+    public List<ShapePiece> Pieces { get; set; }
+
     public ShapeBuilder()
     {
         _massPoints = new Dictionary<Vector, IMassPoint>();
         _springs = new HashSet<(IMassPoint, IMassPoint)>();
+        Pieces = new List<ShapePiece>();
     }
 
     public IShapeBuilder StartPoint(int row, int col)
@@ -40,6 +45,7 @@ internal class ShapeBuilder : IShapeBuilder
         _softBodyEditor = softBodyEditor;
         _massPoints.Clear();
         _springs.Clear();
+        Pieces = new List<ShapePiece>();
         var pointId = DateTime.Now.ToBinary();
         foreach (var (row, col) in shapeCoords)
         {
@@ -69,7 +75,8 @@ internal class ShapeBuilder : IShapeBuilder
         var middleDown = GetMassPointOrCreateNew(piece.MiddleDown);
 
         var middle = GetMassPointOrCreateNew(piece.Middle);
-        middle.Tag = GameConstants.MiddlePoint;
+
+        Pieces.Add(new(middle, new[] { downLeft, upLeft, downRight, upRight, middleLeft, middleUp, middleRight, middleDown, }));
 
         Join(
             downLeft,

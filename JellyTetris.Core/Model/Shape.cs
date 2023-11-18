@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using SoftBodyPhysics.Calculations;
 using SoftBodyPhysics.Model;
@@ -10,23 +9,9 @@ public interface IShape
 {
     ShapeKind Kind { get; }
 
-    ShapePoint[] EdgePoints { get; }
-
-    IEnumerable<IShapeLine> Lines { get; }
+    IShapePart[] Parts { get; }
 
     void ForAllPoints(Action<IMassPoint> action);
-}
-
-internal class InitMassPointPosition
-{
-    public readonly IMassPoint MassPoint;
-    public readonly Vector Position;
-
-    public InitMassPointPosition(IMassPoint massPoint)
-    {
-        MassPoint = massPoint;
-        Position = massPoint.Position.Clone();
-    }
 }
 
 internal interface IShapeInternal : IShape
@@ -48,9 +33,9 @@ internal class Shape : IShapeInternal
 
     public ISoftBody SoftBody { get; }
 
-    public ShapePoint[] EdgePoints { get; set; }
+    public ShapePiece[] Pieces { get; set; }
 
-    public IEnumerable<IShapeLine> Lines => SoftBody.Springs.Select(s => new ShapeLine(new(s.PointA.Position), new(s.PointB.Position), s.IsEdge));
+    public IShapePart[] Parts { get; set; }
 
     public InitMassPointPosition[] InitMassPoints { get; }
 
@@ -60,11 +45,12 @@ internal class Shape : IShapeInternal
 
     public bool IsRotateEnable => Kind != ShapeKind.Cube;
 
-    public Shape(ShapeKind kind, ISoftBody softBody, IEnumerable<IMassPoint> edgePoints)
+    public Shape(ShapeKind kind, ISoftBody softBody, ShapePiece[] pieces, IShapePart[] parts)
     {
         Kind = kind;
         SoftBody = softBody;
-        EdgePoints = edgePoints.Select(x => new ShapePoint(x.Position)).ToArray();
+        Pieces = pieces;
+        Parts = parts;
         InitMassPoints = SoftBody.MassPoints.Select(mp => new InitMassPointPosition(mp)).ToArray();
         InitMiddlePoint = SoftBody.MiddlePoint.Clone();
     }

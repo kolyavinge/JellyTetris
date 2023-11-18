@@ -1,17 +1,17 @@
-﻿using SoftBodyPhysics.Calculations;
+﻿using SoftBodyPhysics.Model;
 
 namespace JellyTetris.Model;
 
 public class ShapePoint
 {
-    private readonly Vector _vector;
+    private readonly IMassPoint _massPoint;
 
-    public float X => _vector.X;
+    public float X => _massPoint.Position.X;
 
-    public float Y => _vector.Y;
+    public float Y => _massPoint.Position.Y;
 
-    internal ShapePoint(Vector vector)
+    internal ShapePoint(IMassPoint massPoint)
     {
-        _vector = vector;
+        _massPoint = massPoint;
     }
 }

@@ -1,17 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using JellyTetris.Model;
 using SoftBodyPhysics.Model;
 
 namespace JellyTetris.Core;
 
 internal interface IShapeEdgeDetector
 {
-    IEnumerable<IMassPoint> GetEdgePoints(ISoftBody body);
+    ShapePoint[] GetEdgePoints(ISoftBody body);
 }
 
 internal class ShapeEdgeDetector : IShapeEdgeDetector
 {
-    public IEnumerable<IMassPoint> GetEdgePoints(ISoftBody body)
+    public ShapePoint[] GetEdgePoints(ISoftBody body)
     {
         var result = new List<IMassPoint>();
 
@@ -35,6 +36,6 @@ internal class ShapeEdgeDetector : IShapeEdgeDetector
             edges.Remove(edge);
         }
 
-        return result;
+        return result.Select(x => new ShapePoint(x)).ToArray();
     }
 }

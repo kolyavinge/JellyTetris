@@ -13,6 +13,4 @@ public static class GameConstants
     public const int FieldWidth = 10;
 
     public const int FieldHeight = 16;
-
-    public const string MiddlePoint = "MiddlePoint";
 }

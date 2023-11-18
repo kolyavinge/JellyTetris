@@ -6,9 +6,13 @@ public static class GameConstants
 
     public const int PieceSizeHalf = PieceSize / 2;
 
+    public const int PieceSizeQuarter = PieceSize / 4;
+
     public const int ShapeKindsCount = 7;
 
     public const int FieldWidth = 10;
 
     public const int FieldHeight = 16;
+
+    public const string MiddlePoint = "MiddlePoint";
 }

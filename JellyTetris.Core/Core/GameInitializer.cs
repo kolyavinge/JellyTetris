@@ -35,7 +35,7 @@ internal class GameInitializer : IGameInitializer
     {
         var width = GameConstants.FieldWidth * GameConstants.PieceSize;
 
-        var editor = _physicsWorld.MakEditor();
+        var editor = _physicsWorld.MakeHardBodyEditor();
 
         var hardBody = editor.AddHardBody();
         editor.AddEdge(hardBody, new(0, 0), new(width, 0));

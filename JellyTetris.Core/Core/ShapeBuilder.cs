@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using SoftBodyPhysics.Ancillary;
 using SoftBodyPhysics.Calculations;
 using SoftBodyPhysics.Model;
@@ -9,7 +10,7 @@ namespace JellyTetris.Core;
 internal interface IShapeBuilder
 {
     IShapeBuilder StartPoint(int row, int col);
-    ISoftBody MakeShape(IReadOnlyCollection<(int row, int col)> shapeCoords, IBodyEditor editor);
+    ISoftBody MakeShape(IReadOnlyCollection<(int row, int col)> shapeCoords, ISoftBodyEditor softBodyEditor);
 }
 
 internal class ShapeBuilder : IShapeBuilder
@@ -17,7 +18,7 @@ internal class ShapeBuilder : IShapeBuilder
     private readonly Dictionary<Vector, IMassPoint> _massPoints;
     private readonly HashSet<(IMassPoint, IMassPoint)> _springs;
     private int _startRow, _startCol;
-    private IBodyEditor? _editor;
+    private ISoftBodyEditor? _softBodyEditor;
     private ISoftBody? _body;
 
     public ShapeBuilder()
@@ -34,28 +35,30 @@ internal class ShapeBuilder : IShapeBuilder
         return this;
     }
 
-    public ISoftBody MakeShape(IReadOnlyCollection<(int row, int col)> shapeCoords, IBodyEditor editor)
+    public ISoftBody MakeShape(IReadOnlyCollection<(int row, int col)> shapeCoords, ISoftBodyEditor softBodyEditor)
     {
-        _editor = editor;
+        _softBodyEditor = softBodyEditor;
         _massPoints.Clear();
         _springs.Clear();
-        _body = editor.MakeSoftBody();
+        var pointId = DateTime.Now.ToBinary();
         foreach (var (row, col) in shapeCoords)
         {
-            MakePiece(row + _startRow, col + _startCol);
+            MakePiece(row + _startRow, col + _startCol, pointId);
         }
-        _editor.Complete();
+        _softBodyEditor.Complete();
+        _body = _softBodyEditor.NewSoftBodies.First(sb => sb.MassPoints.Any(mp => mp.Tag?.Equals(pointId) ?? false));
 
         return _body;
     }
 
-    private void MakePiece(int row, int col)
+    private void MakePiece(int row, int col, long pointId)
     {
-        if (_editor is null) throw new InvalidOperationException();
+        if (_softBodyEditor is null) throw new InvalidOperationException();
 
         var piece = GetPieceCoords(row, col);
 
         var downLeft = GetMassPointOrCreateNew(piece.DownLeft);
+        downLeft.Tag = pointId;
         var upLeft = GetMassPointOrCreateNew(piece.UpLeft);
         var downRight = GetMassPointOrCreateNew(piece.DownRight);
         var upRight = GetMassPointOrCreateNew(piece.UpRight);
@@ -66,6 +69,7 @@ internal class ShapeBuilder : IShapeBuilder
         var middleDown = GetMassPointOrCreateNew(piece.MiddleDown);
 
         var middle = GetMassPointOrCreateNew(piece.Middle);
+        middle.Tag = GameConstants.MiddlePoint;
 
         Join(
             downLeft,
@@ -121,7 +125,7 @@ internal class ShapeBuilder : IShapeBuilder
     {
         if (!_springs.Contains((a, b)))
         {
-            _editor!.AddSpring(_body!, a, b);
+            _softBodyEditor!.AddSpring(a, b);
             _springs.Add((a, b));
         }
     }
@@ -134,7 +138,7 @@ internal class ShapeBuilder : IShapeBuilder
         }
         else
         {
-            var massPoint = _editor!.AddMassPoint(_body!, position);
+            var massPoint = _softBodyEditor!.AddMassPoint(position);
             _massPoints.Add(position, massPoint);
 
             return massPoint;

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:JellyTetris.Windows"
         mc:Ignorable="d"
         Background="#18272b"
-        Title="MainWindow"
+        Title="Jelly Tetris"
         WindowStartupLocation="CenterScreen"
         Height="800"
         Width="1000"

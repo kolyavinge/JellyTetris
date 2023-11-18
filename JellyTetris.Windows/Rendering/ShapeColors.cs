@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Media;
-using JellyTetris.Core;
+using JellyTetris.Model;
 
 namespace JellyTetris.Windows.Rendering;
 

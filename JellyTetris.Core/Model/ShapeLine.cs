@@ -1,23 +1,23 @@
-﻿namespace JellyTetris.Core;
+﻿namespace JellyTetris.Model;
 
 public interface IShapeLine
 {
-    Point From { get; }
+    ShapePoint From { get; }
 
-    Point To { get; }
+    ShapePoint To { get; }
 
     bool IsEdge { get; }
 }
 
 internal class ShapeLine : IShapeLine
 {
-    public Point From { get; }
+    public ShapePoint From { get; }
 
-    public Point To { get; }
+    public ShapePoint To { get; }
 
     public bool IsEdge { get; }
 
-    public ShapeLine(Point from, Point to, bool isEdge)
+    public ShapeLine(ShapePoint from, ShapePoint to, bool isEdge)
     {
         From = from;
         To = to;

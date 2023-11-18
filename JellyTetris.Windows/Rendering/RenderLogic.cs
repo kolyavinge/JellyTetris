@@ -28,10 +28,10 @@ internal class RenderLogic : IRenderLogic
             using (var ctx = geo.Open())
             {
                 var edgePoints = shape.EdgePoints;
-                ctx.BeginFigure(new(edgePoints[0].Position.X, actualHeight - edgePoints[0].Position.Y), true, true);
+                ctx.BeginFigure(new(edgePoints[0].X, actualHeight - edgePoints[0].Y), true, true);
                 for (var i = 1; i < edgePoints.Length; i++)
                 {
-                    ctx.LineTo(new(edgePoints[i].Position.X, actualHeight - edgePoints[i].Position.Y), true, false);
+                    ctx.LineTo(new(edgePoints[i].X, actualHeight - edgePoints[i].Y), true, false);
                 }
             }
             geo.Freeze();

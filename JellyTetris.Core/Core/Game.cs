@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JellyTetris.Model;
 using SoftBodyPhysics.Core;
 
 namespace JellyTetris.Core;
@@ -12,8 +13,9 @@ internal class Game : IGame
     private readonly IShapeMovingLogic _shapeMovingLogic;
     private readonly IShapeRotationLogic _shapeRotationLogic;
     private readonly IShapeCollisionChecker _shapeCollisionChecker;
-    private readonly List<IShapeInternal> _shapes;
-    private IShapeInternal _currentShape;
+    //private readonly ILineEraseLogic _lineEraseLogic;
+    private readonly List<Shape> _shapes;
+    private Shape _currentShape;
     private DateTime _dropShapeTimestamp;
 
     public GameState State { get; private set; }
@@ -30,17 +32,19 @@ internal class Game : IGame
         IShapeGenerator shapeGenerator,
         IShapeMovingLogic shapeMovingLogic,
         IShapeRotationLogic shapeRotationLogic,
-        IShapeCollisionChecker shapeCollisionChecker)
+        IShapeCollisionChecker shapeCollisionChecker/*,
+        ILineEraseLogic lineEraseLogic*/)
     {
         _physicsWorld = physicsWorld;
         _shapeGenerator = shapeGenerator;
         _shapeMovingLogic = shapeMovingLogic;
         _shapeRotationLogic = shapeRotationLogic;
         _shapeCollisionChecker = shapeCollisionChecker;
+        //_lineEraseLogic = lineEraseLogic;
         gameInitializer.Init();
         _currentShape = _shapeGenerator.GetRandomShape();
         //NextShape = _shapeGenerator.GetRandomShape();
-        _shapes = new List<IShapeInternal> { _currentShape };
+        _shapes = new List<Shape> { _currentShape };
         State = GameState.Default;
     }
 
@@ -54,6 +58,7 @@ internal class Game : IGame
         {
             if ((DateTime.Now - _dropShapeTimestamp).TotalSeconds >= 2)
             {
+                //_lineEraseLogic.EraseLineIfNeeded(_shapes);
                 _currentShape = _shapeGenerator.GetRandomShape();
                 _shapes.Add(_currentShape);
                 State = GameState.Default;

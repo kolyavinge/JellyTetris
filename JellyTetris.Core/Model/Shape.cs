@@ -4,15 +4,13 @@ using System.Linq;
 using SoftBodyPhysics.Calculations;
 using SoftBodyPhysics.Model;
 
-namespace JellyTetris.Core;
+namespace JellyTetris.Model;
 
 public interface IShape
 {
     ShapeKind Kind { get; }
 
-    IMassPoint[] EdgePoints { get; }
-
-    IEnumerable<Point> Points { get; }
+    ShapePoint[] EdgePoints { get; }
 
     IEnumerable<IShapeLine> Lines { get; }
 
@@ -50,9 +48,7 @@ internal class Shape : IShapeInternal
 
     public ISoftBody SoftBody { get; }
 
-    public IMassPoint[] EdgePoints { get; set; }
-
-    public IEnumerable<Point> Points => SoftBody.MassPoints.Select(p => new Point(p.Position.X, p.Position.Y));
+    public ShapePoint[] EdgePoints { get; set; }
 
     public IEnumerable<IShapeLine> Lines => SoftBody.Springs.Select(s => new ShapeLine(new(s.PointA.Position), new(s.PointB.Position), s.IsEdge));
 
@@ -68,7 +64,7 @@ internal class Shape : IShapeInternal
     {
         Kind = kind;
         SoftBody = softBody;
-        EdgePoints = edgePoints.ToArray();
+        EdgePoints = edgePoints.Select(x => new ShapePoint(x.Position)).ToArray();
         InitMassPoints = SoftBody.MassPoints.Select(mp => new InitMassPointPosition(mp)).ToArray();
         InitMiddlePoint = SoftBody.MiddlePoint.Clone();
     }

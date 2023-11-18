@@ -1,4 +1,4 @@
-﻿namespace JellyTetris.Core;
+﻿namespace JellyTetris.Model;
 
 public enum ShapeKind
 {

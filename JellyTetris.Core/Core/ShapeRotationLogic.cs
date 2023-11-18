@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using JellyTetris.Model;
 using SoftBodyPhysics.Calculations;
 
 namespace JellyTetris.Core;

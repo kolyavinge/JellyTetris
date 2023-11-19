@@ -22,6 +22,7 @@ internal class ShapeGenerator : IShapeGenerator
     public Shape GetRandomShape()
     {
         var shapeKind = (ShapeKind)_rand.Next(GameConstants.ShapeKindsCount);
+        //var shapeKind = ShapeKind.L1;
         var shape = _shapeFactory.Make(shapeKind);
 
         return shape;

@@ -26,13 +26,13 @@ internal class ShapePartBuilder : IShapePartBuilder
 
     public IEnumerable<ShapePart> GetParts(IEnumerable<ShapePiece> pieces)
     {
-        var softBodies = pieces.Select(p => _physicsWorld.GetSoftBodyByMassPoint(p.MiddlePoint) ?? throw new ArgumentException()).Distinct();
+        var softBodies = pieces.Select(p => _physicsWorld.GetSoftBodyByMassPoint(p.Middle) ?? throw new ArgumentException()).Distinct();
         foreach (var softBody in softBodies)
         {
             var edgePoints = _shapeEdgeDetector.GetEdgePoints(softBody).ToArray();
-            var lines = softBody.Springs.Select(x => new ShapeLine(new(x.PointA), new(x.PointB), x.IsEdge)).ToArray();
+            var lines = softBody.Springs.Select(s => new ShapeLine(s, new(s.PointA), new(s.PointB), s.IsEdge)).ToArray();
 
-            yield return new ShapePart(edgePoints, lines);
+            yield return new ShapePart(softBody, edgePoints, lines);
         }
     }
 }

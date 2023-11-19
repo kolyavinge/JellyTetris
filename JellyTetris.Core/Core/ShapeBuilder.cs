@@ -68,15 +68,22 @@ internal class ShapeBuilder : IShapeBuilder
         var upLeft = GetMassPointOrCreateNew(piece.UpLeft);
         var downRight = GetMassPointOrCreateNew(piece.DownRight);
         var upRight = GetMassPointOrCreateNew(piece.UpRight);
-
         var middleLeft = GetMassPointOrCreateNew(piece.MiddleLeft);
         var middleUp = GetMassPointOrCreateNew(piece.MiddleUp);
         var middleRight = GetMassPointOrCreateNew(piece.MiddleRight);
         var middleDown = GetMassPointOrCreateNew(piece.MiddleDown);
-
         var middle = GetMassPointOrCreateNew(piece.Middle);
 
-        Pieces.Add(new(middle, new[] { downLeft, upLeft, downRight, upRight, middleLeft, middleUp, middleRight, middleDown, }));
+        Pieces.Add(new(
+            downLeft,
+            upLeft,
+            downRight,
+            upRight,
+            middleLeft,
+            middleUp,
+            middleRight,
+            middleDown,
+            middle));
 
         Join(
             downLeft,
@@ -102,12 +109,13 @@ internal class ShapeBuilder : IShapeBuilder
         IMassPoint middle)
     {
         MakeSpringIfNotExist(downLeft, middleLeft);
-        MakeSpringIfNotExist(middleLeft, upLeft);
         MakeSpringIfNotExist(upLeft, middleUp);
-        MakeSpringIfNotExist(middleUp, upRight);
         MakeSpringIfNotExist(upRight, middleRight);
-        MakeSpringIfNotExist(middleRight, downRight);
         MakeSpringIfNotExist(downRight, middleDown);
+
+        MakeSpringIfNotExist(middleLeft, upLeft);
+        MakeSpringIfNotExist(middleRight, downRight);
+        MakeSpringIfNotExist(middleUp, upRight);
         MakeSpringIfNotExist(middleDown, downLeft);
 
         MakeSpringIfNotExist(middleLeft, middle);
@@ -116,16 +124,14 @@ internal class ShapeBuilder : IShapeBuilder
         MakeSpringIfNotExist(middleDown, middle);
 
         MakeSpringIfNotExist(downLeft, middle);
-        MakeSpringIfNotExist(middleLeft, middleDown);
-
-        MakeSpringIfNotExist(middleLeft, middleUp);
         MakeSpringIfNotExist(upLeft, middle);
+        MakeSpringIfNotExist(upRight, middle);
+        MakeSpringIfNotExist(downRight, middle);
 
-        MakeSpringIfNotExist(middle, upRight);
-        MakeSpringIfNotExist(middleUp, middleRight);
-
-        MakeSpringIfNotExist(middleDown, middleRight);
-        MakeSpringIfNotExist(middle, downRight);
+        MakeSpringIfNotExist(middleLeft, middleDown);
+        MakeSpringIfNotExist(middleLeft, middleUp);
+        MakeSpringIfNotExist(middleRight, middleDown);
+        MakeSpringIfNotExist(middleRight, middleUp);
     }
 
     private void MakeSpringIfNotExist(IMassPoint a, IMassPoint b)
@@ -191,7 +197,15 @@ internal class ShapeBuilder : IShapeBuilder
         public readonly Vector Middle;
 
         public PieceCoords(
-            Vector downLeft, Vector upLeft, Vector downRight, Vector upRight, Vector middleLeft, Vector middleUp, Vector middleRight, Vector middleDown, Vector middle)
+            Vector downLeft,
+            Vector upLeft,
+            Vector downRight,
+            Vector upRight,
+            Vector middleLeft,
+            Vector middleUp,
+            Vector middleRight,
+            Vector middleDown,
+            Vector middle)
         {
             DownLeft = downLeft;
             UpLeft = upLeft;

@@ -9,6 +9,8 @@ public interface IShape
 {
     ShapeKind Kind { get; }
 
+    ISoftBody SoftBody { get; }
+
     IShapePart[] Parts { get; }
 
     void ForAllPoints(Action<IMassPoint> action);
@@ -16,8 +18,6 @@ public interface IShape
 
 internal interface IShapeInternal : IShape
 {
-    ISoftBody SoftBody { get; }
-
     InitMassPointPosition[] InitMassPoints { get; }
 
     Vector InitMiddlePoint { get; }
@@ -31,7 +31,7 @@ internal class Shape : IShapeInternal
 {
     public ShapeKind Kind { get; }
 
-    public ISoftBody SoftBody { get; }
+    public ISoftBody SoftBody => Parts.First().SoftBody;
 
     public ShapePiece[] Pieces { get; set; }
 
@@ -48,18 +48,20 @@ internal class Shape : IShapeInternal
     public Shape(ShapeKind kind, ISoftBody softBody, ShapePiece[] pieces, IShapePart[] parts)
     {
         Kind = kind;
-        SoftBody = softBody;
         Pieces = pieces;
         Parts = parts;
-        InitMassPoints = SoftBody.MassPoints.Select(mp => new InitMassPointPosition(mp)).ToArray();
-        InitMiddlePoint = SoftBody.MiddlePoint.Clone();
+        InitMassPoints = softBody.MassPoints.Select(mp => new InitMassPointPosition(mp)).ToArray();
+        InitMiddlePoint = softBody.MiddlePoint.Clone();
     }
 
     public void ForAllPoints(Action<IMassPoint> action)
     {
-        foreach (var massPoint in SoftBody.MassPoints)
+        foreach (var part in Parts)
         {
-            action(massPoint);
+            foreach (var massPoint in part.SoftBody.MassPoints)
+            {
+                action(massPoint);
+            }
         }
     }
 }

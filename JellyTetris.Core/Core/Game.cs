@@ -13,7 +13,8 @@ internal class Game : IGame
     private readonly IShapeMovingLogic _shapeMovingLogic;
     private readonly IShapeRotationLogic _shapeRotationLogic;
     private readonly IShapeCollisionChecker _shapeCollisionChecker;
-    //private readonly ILineEraseLogic _lineEraseLogic;
+    private readonly IShapePartBuilder _shapePartBuilder;
+    private readonly ILineEraseLogic _lineEraseLogic;
     private readonly List<Shape> _shapes;
     private Shape _currentShape;
     private DateTime _dropShapeTimestamp;
@@ -32,15 +33,17 @@ internal class Game : IGame
         IShapeGenerator shapeGenerator,
         IShapeMovingLogic shapeMovingLogic,
         IShapeRotationLogic shapeRotationLogic,
-        IShapeCollisionChecker shapeCollisionChecker/*,
-        ILineEraseLogic lineEraseLogic*/)
+        IShapeCollisionChecker shapeCollisionChecker,
+        IShapePartBuilder shapePartBuilder,
+        ILineEraseLogic lineEraseLogic)
     {
         _physicsWorld = physicsWorld;
         _shapeGenerator = shapeGenerator;
         _shapeMovingLogic = shapeMovingLogic;
         _shapeRotationLogic = shapeRotationLogic;
         _shapeCollisionChecker = shapeCollisionChecker;
-        //_lineEraseLogic = lineEraseLogic;
+        _shapePartBuilder = shapePartBuilder;
+        _lineEraseLogic = lineEraseLogic;
         gameInitializer.Init();
         _currentShape = _shapeGenerator.GetRandomShape();
         //NextShape = _shapeGenerator.GetRandomShape();
@@ -58,9 +61,13 @@ internal class Game : IGame
         {
             if ((DateTime.Now - _dropShapeTimestamp).TotalSeconds >= 2)
             {
-                //_lineEraseLogic.EraseLineIfNeeded(_shapes);
+                _lineEraseLogic.EraseLineIfNeeded(_shapes);
                 _currentShape = _shapeGenerator.GetRandomShape();
                 _shapes.Add(_currentShape);
+                foreach (var shape in _shapes)
+                {
+                    shape.Parts = _shapePartBuilder.GetParts(shape.Pieces).ToArray();
+                }
                 State = GameState.Default;
             }
         }

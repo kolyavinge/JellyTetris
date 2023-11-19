@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using JellyTetris.Model;
 using SoftBodyPhysics.Model;
@@ -14,6 +15,7 @@ internal class ShapeEdgeDetector : IShapeEdgeDetector
 {
     public ShapePoint[] GetEdgePoints(ISoftBody body)
     {
+        return Array.Empty<ShapePoint>();
         var result = new List<IMassPoint>();
 
         var edges = body.Springs.Where(s => s.IsEdge).ToList();

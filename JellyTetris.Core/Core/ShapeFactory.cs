@@ -50,49 +50,49 @@ internal class ShapeFactory : IShapeFactory
 
     public Shape MakeCube()
     {
-        var body = _shapeBuilder.StartPoint(GameConstants.FieldHeight, 4).MakeShape(new[] { (0, 0), (0, 1), (1, 1), (1, 0) }, _physicsWorld);
+        var body = _shapeBuilder.StartPoint(GameConstants.FieldHeight, 4).MakeShape(new[] { (0, 0), (0, 1), (1, 1), (1, 0) });
 
         return new(ShapeKind.Cube, body, _shapeBuilder.Pieces.ToArray(), _shapePartBuilder.GetParts(_shapeBuilder.Pieces).ToArray());
     }
 
     public Shape MakeLine()
     {
-        var body = _shapeBuilder.StartPoint(GameConstants.FieldHeight, 4).MakeShape(new[] { (0, 0), (1, 0), (2, 0), (3, 0) }, _physicsWorld);
+        var body = _shapeBuilder.StartPoint(GameConstants.FieldHeight, 4).MakeShape(new[] { (0, 0), (1, 0), (2, 0), (3, 0) });
 
         return new(ShapeKind.Line, body, _shapeBuilder.Pieces.ToArray(), _shapePartBuilder.GetParts(_shapeBuilder.Pieces).ToArray());
     }
 
     public Shape MakeT()
     {
-        var body = _shapeBuilder.StartPoint(GameConstants.FieldHeight, 4).MakeShape(new[] { (0, 0), (0, 1), (0, 2), (1, 1) }, _physicsWorld);
+        var body = _shapeBuilder.StartPoint(GameConstants.FieldHeight, 4).MakeShape(new[] { (0, 0), (0, 1), (0, 2), (1, 1) });
 
         return new(ShapeKind.T, body, _shapeBuilder.Pieces.ToArray(), _shapePartBuilder.GetParts(_shapeBuilder.Pieces).ToArray());
     }
 
     public Shape MakeL1()
     {
-        var body = _shapeBuilder.StartPoint(GameConstants.FieldHeight, 4).MakeShape(new[] { (2, 0), (1, 0), (0, 0), (0, 1) }, _physicsWorld);
+        var body = _shapeBuilder.StartPoint(GameConstants.FieldHeight, 4).MakeShape(new[] { (2, 0), (1, 0), (0, 0), (0, 1) });
 
         return new(ShapeKind.L1, body, _shapeBuilder.Pieces.ToArray(), _shapePartBuilder.GetParts(_shapeBuilder.Pieces).ToArray());
     }
 
     public Shape MakeL2()
     {
-        var body = _shapeBuilder.StartPoint(GameConstants.FieldHeight, 4).MakeShape(new[] { (2, 1), (1, 1), (0, 1), (0, 0) }, _physicsWorld);
+        var body = _shapeBuilder.StartPoint(GameConstants.FieldHeight, 4).MakeShape(new[] { (2, 1), (1, 1), (0, 1), (0, 0) });
 
         return new(ShapeKind.L2, body, _shapeBuilder.Pieces.ToArray(), _shapePartBuilder.GetParts(_shapeBuilder.Pieces).ToArray());
     }
 
     public Shape MakeS1()
     {
-        var body = _shapeBuilder.StartPoint(GameConstants.FieldHeight, 4).MakeShape(new[] { (2, 0), (1, 0), (1, 1), (0, 1) }, _physicsWorld);
+        var body = _shapeBuilder.StartPoint(GameConstants.FieldHeight, 4).MakeShape(new[] { (2, 0), (1, 0), (1, 1), (0, 1) });
 
         return new(ShapeKind.S1, body, _shapeBuilder.Pieces.ToArray(), _shapePartBuilder.GetParts(_shapeBuilder.Pieces).ToArray());
     }
 
     public Shape MakeS2()
     {
-        var body = _shapeBuilder.StartPoint(GameConstants.FieldHeight, 4).MakeShape(new[] { (2, 1), (1, 1), (1, 0), (0, 0) }, _physicsWorld);
+        var body = _shapeBuilder.StartPoint(GameConstants.FieldHeight, 4).MakeShape(new[] { (2, 1), (1, 1), (1, 0), (0, 0) });
 
         return new(ShapeKind.S2, body, _shapeBuilder.Pieces.ToArray(), _shapePartBuilder.GetParts(_shapeBuilder.Pieces).ToArray());
     }

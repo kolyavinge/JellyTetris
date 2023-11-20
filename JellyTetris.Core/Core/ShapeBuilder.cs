@@ -12,22 +12,23 @@ internal interface IShapeBuilder
 {
     List<ShapePiece> Pieces { get; set; }
     IShapeBuilder StartPoint(int row, int col);
-    ISoftBody MakeShape(IReadOnlyCollection<(int row, int col)> shapeCoords, IPhysicsWorld physicsWorld);
+    ISoftBody MakeShape(IReadOnlyCollection<(int row, int col)> shapeCoords);
 }
 
 internal class ShapeBuilder : IShapeBuilder
 {
     private readonly Dictionary<Vector, IMassPoint> _massPoints;
     private readonly HashSet<(IMassPoint, IMassPoint)> _springs;
+    private readonly IPhysicsWorld _physicsWorld;
     private int _startRow, _startCol;
-    private IPhysicsWorld? _physicsWorld;
     private ISoftBodyEditor? _softBodyEditor;
     private ISoftBody? _body;
 
     public List<ShapePiece> Pieces { get; set; }
 
-    public ShapeBuilder()
+    public ShapeBuilder(IPhysicsWorld physicsWorld)
     {
+        _physicsWorld = physicsWorld;
         _massPoints = new Dictionary<Vector, IMassPoint>();
         _springs = new HashSet<(IMassPoint, IMassPoint)>();
         Pieces = new List<ShapePiece>();
@@ -41,9 +42,8 @@ internal class ShapeBuilder : IShapeBuilder
         return this;
     }
 
-    public ISoftBody MakeShape(IReadOnlyCollection<(int row, int col)> shapeCoords, IPhysicsWorld physicsWorld)
+    public ISoftBody MakeShape(IReadOnlyCollection<(int row, int col)> shapeCoords)
     {
-        _physicsWorld = physicsWorld;
         _softBodyEditor = _physicsWorld.MakeSoftBodyEditor();
         _massPoints.Clear();
         _springs.Clear();

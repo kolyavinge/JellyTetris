@@ -2,7 +2,6 @@
 using System.Linq;
 using JellyTetris.Model;
 using SoftBodyPhysics.Core;
-using SoftBodyPhysics.Model;
 
 namespace JellyTetris.Core;
 
@@ -29,36 +28,21 @@ internal class LineEraseLogic : ILineEraseLogic
         var shapesToErase = GetShapesToErase(shapes).ToArray();
         if (!shapesToErase.Any()) return;
         ErasePieces(shapesToErase);
-        DeleteEmptyShapes(shapes);
+        shapes.RemoveAll(x => x.Pieces.Length == 0);
     }
 
     private IEnumerable<ShapeToErase> GetShapesToErase(List<Shape> shapes)
     {
-        var shapeSoftBodyDictionary = new Dictionary<ISoftBody, Shape>();
-        foreach (var shape in shapes)
-        {
-            foreach (var softBody in shape.Parts.Select(x => x.SoftBody).Distinct())
-            {
-                shapeSoftBodyDictionary.Add(softBody, shape);
-            }
-        }
-        var maxY = _physicsWorld.SoftBodies.SelectMany(x => x.MassPoints).Max(x => x.Position.Y);
-        for (float y = GameConstants.PieceSizeHalf; y <= maxY; y += GameConstants.PieceSize)
+        int maxRow = (int)_physicsWorld.SoftBodies.SelectMany(x => x.MassPoints).Max(x => x.Position.Y / GameConstants.PieceSize);
+        for (int row = 0; row < maxRow; row++)
         {
             var matchedShapes = new HashSet<Shape>();
-            for (float x = 0; x < GameConstants.FieldWidth * GameConstants.PieceSize; x += GameConstants.PieceSize)
+            for (int col = 0; col < GameConstants.FieldWidth; col++)
             {
-                var matchedBody = _physicsWorld
-                    .GetSoftBodyByPosition(new(x, y))
-                    .Union(_physicsWorld.GetSoftBodyByPosition(new(x + GameConstants.PieceSizeQuarter, y)))
-                    .Union(_physicsWorld.GetSoftBodyByPosition(new(x + GameConstants.PieceSizeHalf, y)))
-                    .Union(_physicsWorld.GetSoftBodyByPosition(new(x + GameConstants.PieceSizeHalf + GameConstants.PieceSizeQuarter, y)))
-                    .Union(_physicsWorld.GetSoftBodyByPosition(new(x + GameConstants.PieceSize, y)))
-                    .FirstOrDefault();
-                if (matchedBody is not null)
+                var matchedShape = shapes.Find(shape => ShapeIn(shape, row, col));
+                if (matchedShape is not null)
                 {
-                    var shape = shapeSoftBodyDictionary[matchedBody];
-                    matchedShapes.Add(shape);
+                    matchedShapes.Add(matchedShape);
                 }
                 else
                 {
@@ -68,7 +52,6 @@ internal class LineEraseLogic : ILineEraseLogic
             }
             if (matchedShapes.Any())
             {
-                var row = (int)(y / GameConstants.PieceSize);
                 foreach (var shape in matchedShapes)
                 {
                     yield return new(row, shape);
@@ -83,11 +66,11 @@ internal class LineEraseLogic : ILineEraseLogic
         foreach (var shapeToErase in shapesToErase)
         {
             var notErasedPieces = shapeToErase.Shape.Pieces
-                .Where(piece => (int)(piece.Middle.Position.Y / GameConstants.PieceSize) != shapeToErase.Row)
+                .Where(piece => !PieceIn(piece, shapeToErase.Row))
                 .ToArray();
 
             var erasedPieces = shapeToErase.Shape.Pieces
-                .Where(piece => (int)(piece.Middle.Position.Y / GameConstants.PieceSize) == shapeToErase.Row)
+                .Where(piece => PieceIn(piece, shapeToErase.Row))
                 .ToArray();
 
             var notErasedPiecePoints = notErasedPieces.SelectMany(piece => piece.AllPoints).ToHashSet();
@@ -131,9 +114,16 @@ internal class LineEraseLogic : ILineEraseLogic
         }
     }
 
-    private void DeleteEmptyShapes(List<Shape> shapes)
+    private bool ShapeIn(Shape shape, int row, int col)
     {
-        shapes.RemoveAll(x => x.Pieces.Length == 0);
+        return shape.Pieces.Any(piece =>
+            piece.AllPoints.Any(p => row == (int)(p.Position.Y / GameConstants.PieceSize) &&
+                                     col == (int)(p.Position.X / GameConstants.PieceSize)));
+    }
+
+    private bool PieceIn(ShapePiece piece, int row)
+    {
+        return piece.AllPoints.Any(p => row == (int)(p.Position.Y / GameConstants.PieceSize));
     }
 
     private readonly struct ShapeToErase

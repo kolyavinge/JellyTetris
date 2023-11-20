@@ -8,7 +8,7 @@ namespace JellyTetris.Windows.Rendering;
 internal class RenderLogic : IRenderLogic
 {
     private readonly Pen _axisPen = new(Brushes.DimGray, 0.1);
-    private readonly Pen _shapeBorderPen = new(Brushes.Black, 1.0);
+    private readonly Pen _shapeBorderPen = new(Brushes.Black, 0.5);
 
     public void Render(DrawingContext dc, IGame game, double actualWidth, double actualHeight)
     {

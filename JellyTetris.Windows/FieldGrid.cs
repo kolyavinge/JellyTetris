@@ -13,8 +13,8 @@ internal class FieldGrid : Grid
 
     public FieldGrid()
     {
-        //_renderLogic = new RenderLogic();
-        _renderLogic = new DebugRenderLogic();
+        _renderLogic = new RenderLogic();
+        //_renderLogic = new DebugRenderLogic();
         Width = GameConstants.FieldWidth * GameConstants.PieceSize;
         Height = GameConstants.FieldHeight * GameConstants.PieceSize;
     }

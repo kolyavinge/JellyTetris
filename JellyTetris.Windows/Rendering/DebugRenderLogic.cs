@@ -32,7 +32,7 @@ internal class DebugRenderLogic : IRenderLogic
         {
             foreach (var line in part.Lines)
             {
-                var pen = line.IsEdge ? new Pen(Brushes.Green, 0.8) : new Pen(Brushes.DimGray, 0.8);
+                var pen = line.IsEdge ? new Pen(Brushes.Green, 0.5) : new Pen(Brushes.DimGray, 0.5);
                 dc.DrawLine(pen, new(line.From.X, actualHeight - line.From.Y), new(line.To.X, actualHeight - line.To.Y));
                 dc.DrawEllipse(Brushes.Red, null, new(line.From.X, actualHeight - line.From.Y), 1.0, 1.0);
                 dc.DrawEllipse(Brushes.Red, null, new(line.To.X, actualHeight - line.To.Y), 1.0, 1.0);

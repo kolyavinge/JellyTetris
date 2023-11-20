@@ -37,7 +37,7 @@ internal class LineEraseLogic : ILineEraseLogic
         var shapeSoftBodyDictionary = new Dictionary<ISoftBody, Shape>();
         foreach (var shape in shapes)
         {
-            foreach (var softBody in shape.Parts.Select(x => x.SoftBody))
+            foreach (var softBody in shape.Parts.Select(x => x.SoftBody).Distinct())
             {
                 shapeSoftBodyDictionary.Add(softBody, shape);
             }
@@ -77,7 +77,7 @@ internal class LineEraseLogic : ILineEraseLogic
         }
     }
 
-    private void ErasePieces(IEnumerable<ShapeToErase> shapesToErase)
+    private void ErasePieces(IReadOnlyCollection<ShapeToErase> shapesToErase)
     {
         var editor = _physicsWorld.MakeSoftBodyEditor();
         foreach (var shapeToErase in shapesToErase)
@@ -101,6 +101,7 @@ internal class LineEraseLogic : ILineEraseLogic
                 shapeToErase.Shape.Parts
                 .SelectMany(x => x.Lines)
                 .Select(x => x.Spring)
+                .Distinct()
                 .ToArray();
 
             var erasedSprings =
@@ -135,7 +136,7 @@ internal class LineEraseLogic : ILineEraseLogic
         shapes.RemoveAll(x => x.Pieces.Length == 0);
     }
 
-    readonly struct ShapeToErase
+    private readonly struct ShapeToErase
     {
         public readonly int Row;
         public readonly Shape Shape;

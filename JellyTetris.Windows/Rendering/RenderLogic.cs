@@ -12,16 +12,16 @@ internal class RenderLogic : IRenderLogic
 
     public void Render(DrawingContext dc, IGame game, double actualWidth, double actualHeight)
     {
-        for (int i = 1; i < GameConstants.FieldWidth; i++)
+        DrawGrid(dc);
+        DrawShapes(dc, game, actualHeight);
+        if (game.State == GameState.Over)
         {
-            dc.DrawLine(_axisPen, new(i * GameConstants.PieceSize, 0), new(i * GameConstants.PieceSize, GameConstants.FieldHeight * GameConstants.PieceSize));
+            DrawGameOver(dc, actualWidth, actualHeight);
         }
+    }
 
-        for (int i = 1; i < GameConstants.FieldHeight; i++)
-        {
-            dc.DrawLine(_axisPen, new(0, i * GameConstants.PieceSize), new(GameConstants.FieldWidth * GameConstants.PieceSize, i * GameConstants.PieceSize));
-        }
-
+    private void DrawShapes(DrawingContext dc, IGame game, double actualHeight)
+    {
         foreach (var shape in game.Shapes)
         {
             foreach (var part in shape.Parts)
@@ -39,16 +39,29 @@ internal class RenderLogic : IRenderLogic
                 dc.DrawGeometry(ShapeColors.GetBrush(shape.Kind), _shapeBorderPen, geo);
             }
         }
+    }
 
-        if (game.State == GameState.Over)
+    private void DrawGrid(DrawingContext dc)
+    {
+        for (int i = 1; i < GameConstants.FieldWidth; i++)
         {
-            var text = new FormattedText(
-                "GAME\nOVER", CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new(new("Consolas"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal), 120.0, Brushes.Black, 1.0);
-            dc.DrawText(text, new((actualWidth - text.Width) / 2.0 + 4.0, (actualHeight - text.Height) / 2.0 + 4.0));
-
-            text = new FormattedText(
-                "GAME\nOVER", CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new(new("Consolas"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal), 120.0, Brushes.DarkGray, 1.0);
-            dc.DrawText(text, new((actualWidth - text.Width) / 2.0, (actualHeight - text.Height) / 2.0));
+            dc.DrawLine(_axisPen, new(i * GameConstants.PieceSize, 0), new(i * GameConstants.PieceSize, GameConstants.FieldHeight * GameConstants.PieceSize));
         }
+
+        for (int i = 1; i < GameConstants.FieldHeight; i++)
+        {
+            dc.DrawLine(_axisPen, new(0, i * GameConstants.PieceSize), new(GameConstants.FieldWidth * GameConstants.PieceSize, i * GameConstants.PieceSize));
+        }
+    }
+
+    private void DrawGameOver(DrawingContext dc, double actualWidth, double actualHeight)
+    {
+        var text = new FormattedText(
+            "GAME\nOVER", CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new(new("Consolas"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal), 120.0, Brushes.Black, 1.0);
+        dc.DrawText(text, new((actualWidth - text.Width) / 2.0 + 4.0, (actualHeight - text.Height) / 2.0 + 4.0));
+
+        text = new FormattedText(
+            "GAME\nOVER", CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new(new("Consolas"), FontStyles.Normal, FontWeights.Bold, FontStretches.Normal), 120.0, Brushes.DarkGray, 1.0);
+        dc.DrawText(text, new((actualWidth - text.Width) / 2.0, (actualHeight - text.Height) / 2.0));
     }
 }

@@ -10,15 +10,7 @@ internal class DebugRenderLogic : IRenderLogic
 
     public void Render(DrawingContext dc, IGame game, double actualWidth, double actualHeight)
     {
-        for (int i = 1; i < GameConstants.FieldWidth; i++)
-        {
-            dc.DrawLine(_axisPen, new(i * GameConstants.PieceSize, 0), new(i * GameConstants.PieceSize, GameConstants.FieldHeight * GameConstants.PieceSize));
-        }
-
-        for (int i = 1; i < GameConstants.FieldHeight; i++)
-        {
-            dc.DrawLine(_axisPen, new(0, i * GameConstants.PieceSize), new(GameConstants.FieldWidth * GameConstants.PieceSize, i * GameConstants.PieceSize));
-        }
+        DrawGrid(dc);
 
         foreach (var shape in game.Shapes)
         {
@@ -37,6 +29,19 @@ internal class DebugRenderLogic : IRenderLogic
                 dc.DrawEllipse(Brushes.Red, null, new(line.From.X, actualHeight - line.From.Y), 1.0, 1.0);
                 dc.DrawEllipse(Brushes.Red, null, new(line.To.X, actualHeight - line.To.Y), 1.0, 1.0);
             }
+        }
+    }
+
+    private void DrawGrid(DrawingContext dc)
+    {
+        for (int i = 1; i < GameConstants.FieldWidth; i++)
+        {
+            dc.DrawLine(_axisPen, new(i * GameConstants.PieceSize, 0), new(i * GameConstants.PieceSize, GameConstants.FieldHeight * GameConstants.PieceSize));
+        }
+
+        for (int i = 1; i < GameConstants.FieldHeight; i++)
+        {
+            dc.DrawLine(_axisPen, new(0, i * GameConstants.PieceSize), new(GameConstants.FieldWidth * GameConstants.PieceSize, i * GameConstants.PieceSize));
         }
     }
 }

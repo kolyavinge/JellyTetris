@@ -9,14 +9,7 @@ public interface IShapePart
     IShapeLine[] Lines { get; }
 }
 
-internal interface IShapePartInternal : IShapePart
-{
-    ISoftBody SoftBody { get; }
-
-    IShapeLineInternal[] Lines { get; }
-}
-
-internal class ShapePart : IShapePartInternal
+internal class ShapePart : IShapePart
 {
     public ISoftBody SoftBody { get; }
 
@@ -24,9 +17,9 @@ internal class ShapePart : IShapePartInternal
 
     IShapeLine[] IShapePart.Lines => Lines;
 
-    public IShapeLineInternal[] Lines { get; }
+    public ShapeLine[] Lines { get; }
 
-    public ShapePart(ISoftBody softBody, ShapePoint[] edgePoints, IShapeLineInternal[] lines)
+    public ShapePart(ISoftBody softBody, ShapePoint[] edgePoints, ShapeLine[] lines)
     {
         SoftBody = softBody;
         EdgePoints = edgePoints;

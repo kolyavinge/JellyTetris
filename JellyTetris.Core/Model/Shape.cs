@@ -12,22 +12,7 @@ public interface IShape
     IShapePart[] Parts { get; }
 }
 
-internal interface IShapeInternal : IShape
-{
-    ISoftBody SoftBody { get; }
-
-    InitMassPointPosition[] InitMassPoints { get; }
-
-    Vector InitMiddlePoint { get; }
-
-    float CurrentAngle { get; set; }
-
-    bool IsRotateEnable { get; }
-
-    void ForAllPoints(Action<IMassPoint> action);
-}
-
-internal class Shape : IShapeInternal
+internal class Shape : IShape
 {
     public ShapeKind Kind { get; }
 
@@ -37,7 +22,7 @@ internal class Shape : IShapeInternal
 
     IShapePart[] IShape.Parts => Parts;
 
-    public ShapePart[] Parts;
+    public ShapePart[] Parts { get; set; }
 
     public InitMassPointPosition[] InitMassPoints { get; }
 

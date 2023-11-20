@@ -7,7 +7,7 @@ namespace JellyTetris.Core;
 
 internal interface IShapeRotationLogic
 {
-    void Rotate(IShapeInternal shape);
+    void Rotate(Shape shape);
 }
 
 internal class ShapeRotationLogic : IShapeRotationLogic
@@ -20,7 +20,7 @@ internal class ShapeRotationLogic : IShapeRotationLogic
         _shapeCollisionChecker = shapeCollisionChecker;
     }
 
-    public void Rotate(IShapeInternal shape)
+    public void Rotate(Shape shape)
     {
         if (!shape.IsRotateEnable) return;
 

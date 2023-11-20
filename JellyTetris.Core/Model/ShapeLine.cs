@@ -11,12 +11,7 @@ public interface IShapeLine
     bool IsEdge { get; }
 }
 
-internal interface IShapeLineInternal : IShapeLine
-{
-    ISpring Spring { get; }
-}
-
-internal class ShapeLine : IShapeLineInternal
+internal class ShapeLine : IShapeLine
 {
     public ISpring Spring { get; }
 

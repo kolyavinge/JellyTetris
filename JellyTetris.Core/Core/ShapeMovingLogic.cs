@@ -5,9 +5,9 @@ namespace JellyTetris.Core;
 
 internal interface IShapeMovingLogic
 {
-    void MoveLeft(IShapeInternal shape);
+    void MoveLeft(Shape shape);
 
-    void MoveRight(IShapeInternal shape);
+    void MoveRight(Shape shape);
 }
 
 internal class ShapeMovingLogic : IShapeMovingLogic
@@ -19,7 +19,7 @@ internal class ShapeMovingLogic : IShapeMovingLogic
         _shapeCollisionChecker = shapeCollisionChecker;
     }
 
-    public void MoveLeft(IShapeInternal shape)
+    public void MoveLeft(Shape shape)
     {
         for (int i = 0; i < 20; i++)
         {
@@ -27,7 +27,7 @@ internal class ShapeMovingLogic : IShapeMovingLogic
         }
     }
 
-    public void MoveRight(IShapeInternal shape)
+    public void MoveRight(Shape shape)
     {
         for (int i = 0; i < 20; i++)
         {
@@ -35,7 +35,7 @@ internal class ShapeMovingLogic : IShapeMovingLogic
         }
     }
 
-    private bool Move(IShapeInternal shape, float step)
+    private bool Move(Shape shape, float step)
     {
         var points = shape.SoftBody.MassPoints
             .Select(x => new MovedPoint(x, new(x.Position.X + 2.0f * step, x.Position.Y)))

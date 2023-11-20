@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using JellyTetris.Model;
 using SoftBodyPhysics.Ancillary;
 using SoftBodyPhysics.Calculations;
+using SoftBodyPhysics.Core;
 using SoftBodyPhysics.Model;
 
 namespace JellyTetris.Core;
@@ -12,7 +12,7 @@ internal interface IShapeBuilder
 {
     List<ShapePiece> Pieces { get; set; }
     IShapeBuilder StartPoint(int row, int col);
-    ISoftBody MakeShape(IReadOnlyCollection<(int row, int col)> shapeCoords, ISoftBodyEditor softBodyEditor);
+    ISoftBody MakeShape(IReadOnlyCollection<(int row, int col)> shapeCoords, IPhysicsWorld physicsWorld);
 }
 
 internal class ShapeBuilder : IShapeBuilder
@@ -20,6 +20,7 @@ internal class ShapeBuilder : IShapeBuilder
     private readonly Dictionary<Vector, IMassPoint> _massPoints;
     private readonly HashSet<(IMassPoint, IMassPoint)> _springs;
     private int _startRow, _startCol;
+    private IPhysicsWorld? _physicsWorld;
     private ISoftBodyEditor? _softBodyEditor;
     private ISoftBody? _body;
 
@@ -40,31 +41,30 @@ internal class ShapeBuilder : IShapeBuilder
         return this;
     }
 
-    public ISoftBody MakeShape(IReadOnlyCollection<(int row, int col)> shapeCoords, ISoftBodyEditor softBodyEditor)
+    public ISoftBody MakeShape(IReadOnlyCollection<(int row, int col)> shapeCoords, IPhysicsWorld physicsWorld)
     {
-        _softBodyEditor = softBodyEditor;
+        _physicsWorld = physicsWorld;
+        _softBodyEditor = _physicsWorld.MakeSoftBodyEditor();
         _massPoints.Clear();
         _springs.Clear();
         Pieces = new List<ShapePiece>();
-        var pointId = DateTime.Now.ToBinary();
         foreach (var (row, col) in shapeCoords)
         {
-            MakePiece(row + _startRow, col + _startCol, pointId);
+            MakePiece(row + _startRow, col + _startCol);
         }
         _softBodyEditor.Complete();
-        _body = _softBodyEditor.NewSoftBodies.First(sb => sb.MassPoints.Any(mp => mp.Tag?.Equals(pointId) ?? false));
+        _body = _physicsWorld.GetSoftBodyByMassPoint(Pieces[0].Middle);
 
         return _body;
     }
 
-    private void MakePiece(int row, int col, long pointId)
+    private void MakePiece(int row, int col)
     {
         if (_softBodyEditor is null) throw new InvalidOperationException();
 
         var piece = GetPieceCoords(row, col);
 
         var downLeft = GetMassPointOrCreateNew(piece.DownLeft);
-        downLeft.Tag = pointId;
         var upLeft = GetMassPointOrCreateNew(piece.UpLeft);
         var downRight = GetMassPointOrCreateNew(piece.DownRight);
         var upRight = GetMassPointOrCreateNew(piece.UpRight);

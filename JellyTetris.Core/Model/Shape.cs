@@ -9,15 +9,13 @@ public interface IShape
 {
     ShapeKind Kind { get; }
 
-    ISoftBody SoftBody { get; }
-
     IShapePart[] Parts { get; }
-
-    void ForAllPoints(Action<IMassPoint> action);
 }
 
 internal interface IShapeInternal : IShape
 {
+    ISoftBody SoftBody { get; }
+
     InitMassPointPosition[] InitMassPoints { get; }
 
     Vector InitMiddlePoint { get; }
@@ -25,6 +23,8 @@ internal interface IShapeInternal : IShape
     float CurrentAngle { get; set; }
 
     bool IsRotateEnable { get; }
+
+    void ForAllPoints(Action<IMassPoint> action);
 }
 
 internal class Shape : IShapeInternal
@@ -35,7 +35,9 @@ internal class Shape : IShapeInternal
 
     public ShapePiece[] Pieces { get; set; }
 
-    public IShapePart[] Parts { get; set; }
+    IShapePart[] IShape.Parts => Parts;
+
+    public ShapePart[] Parts;
 
     public InitMassPointPosition[] InitMassPoints { get; }
 
@@ -45,7 +47,7 @@ internal class Shape : IShapeInternal
 
     public bool IsRotateEnable => Kind != ShapeKind.Cube;
 
-    public Shape(ShapeKind kind, ISoftBody softBody, ShapePiece[] pieces, IShapePart[] parts)
+    public Shape(ShapeKind kind, ISoftBody softBody, ShapePiece[] pieces, ShapePart[] parts)
     {
         Kind = kind;
         Pieces = pieces;
@@ -56,12 +58,9 @@ internal class Shape : IShapeInternal
 
     public void ForAllPoints(Action<IMassPoint> action)
     {
-        foreach (var part in Parts)
+        foreach (var massPoint in SoftBody.MassPoints)
         {
-            foreach (var massPoint in part.SoftBody.MassPoints)
-            {
-                action(massPoint);
-            }
+            action(massPoint);
         }
     }
 }

@@ -4,8 +4,6 @@ namespace JellyTetris.Model;
 
 public interface IShapeLine
 {
-    ISpring Spring { get; }
-
     ShapePoint From { get; }
 
     ShapePoint To { get; }
@@ -13,7 +11,12 @@ public interface IShapeLine
     bool IsEdge { get; }
 }
 
-internal class ShapeLine : IShapeLine
+internal interface IShapeLineInternal : IShapeLine
+{
+    ISpring Spring { get; }
+}
+
+internal class ShapeLine : IShapeLineInternal
 {
     public ISpring Spring { get; }
 

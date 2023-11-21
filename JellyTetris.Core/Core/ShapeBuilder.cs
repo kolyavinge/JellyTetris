@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using JellyTetris.Model;
 using SoftBodyPhysics.Ancillary;
 using SoftBodyPhysics.Calculations;
@@ -10,9 +9,9 @@ namespace JellyTetris.Core;
 
 internal interface IShapeBuilder
 {
-    List<ShapePiece> Pieces { get; set; }
+    List<ShapePiece> Pieces { get; }
     IShapeBuilder StartPoint(int row, int col);
-    ISoftBody MakeShape(IReadOnlyCollection<(int row, int col)> shapeCoords);
+    ISoftBody MakeShape(params (int row, int col)[] shapeCoords);
 }
 
 internal class ShapeBuilder : IShapeBuilder
@@ -22,9 +21,8 @@ internal class ShapeBuilder : IShapeBuilder
     private readonly IPhysicsWorld _physicsWorld;
     private int _startRow, _startCol;
     private ISoftBodyEditor? _softBodyEditor;
-    private ISoftBody? _body;
 
-    public List<ShapePiece> Pieces { get; set; }
+    public List<ShapePiece> Pieces { get; }
 
     public ShapeBuilder(IPhysicsWorld physicsWorld)
     {
@@ -42,26 +40,24 @@ internal class ShapeBuilder : IShapeBuilder
         return this;
     }
 
-    public ISoftBody MakeShape(IReadOnlyCollection<(int row, int col)> shapeCoords)
+    public ISoftBody MakeShape(params (int row, int col)[] shapeCoords)
     {
         _softBodyEditor = _physicsWorld.MakeSoftBodyEditor();
         _massPoints.Clear();
         _springs.Clear();
-        Pieces = new List<ShapePiece>();
+        Pieces.Clear();
         foreach (var (row, col) in shapeCoords)
         {
             MakePiece(row + _startRow, col + _startCol);
         }
         _softBodyEditor.Complete();
-        _body = _physicsWorld.GetSoftBodyByMassPoint(Pieces[0].Middle);
+        var body = _physicsWorld.GetSoftBodyByMassPoint(Pieces[0].Middle);
 
-        return _body;
+        return body;
     }
 
     private void MakePiece(int row, int col)
     {
-        if (_softBodyEditor is null) throw new InvalidOperationException();
-
         var piece = GetPieceCoords(row, col);
 
         var downLeft = GetMassPointOrCreateNew(piece.DownLeft);
@@ -145,17 +141,15 @@ internal class ShapeBuilder : IShapeBuilder
 
     private IMassPoint GetMassPointOrCreateNew(Vector position)
     {
-        if (_massPoints.ContainsKey(position))
+        if (_massPoints.TryGetValue(position, out IMassPoint? existMassPoint))
         {
-            return _massPoints[position];
+            return existMassPoint;
         }
-        else
-        {
-            var massPoint = _softBodyEditor!.AddMassPoint(position);
-            _massPoints.Add(position, massPoint);
 
-            return massPoint;
-        }
+        var newMassPoint = _softBodyEditor!.AddMassPoint(position);
+        _massPoints.Add(position, newMassPoint);
+
+        return newMassPoint;
     }
 
     private PieceCoords GetPieceCoords(int row, int col)

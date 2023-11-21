@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using SoftBodyPhysics.Calculations;
 using SoftBodyPhysics.Model;
@@ -32,11 +33,11 @@ internal class Shape : IShape
 
     public bool IsRotateEnable => Kind != ShapeKind.Cube;
 
-    public Shape(ShapeKind kind, ISoftBody softBody, ShapePiece[] pieces, ShapePart[] parts)
+    public Shape(ShapeKind kind, ISoftBody softBody, IEnumerable<ShapePiece> pieces, IEnumerable<ShapePart> parts)
     {
         Kind = kind;
-        Pieces = pieces;
-        Parts = parts;
+        Pieces = pieces.ToArray();
+        Parts = parts.ToArray();
         InitMassPoints = softBody.MassPoints.Select(mp => new InitMassPointPosition(mp)).ToArray();
         InitMiddlePoint = softBody.MiddlePoint.Clone();
     }

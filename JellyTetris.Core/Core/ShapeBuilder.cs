@@ -9,9 +9,8 @@ namespace JellyTetris.Core;
 
 internal interface IShapeBuilder
 {
-    List<ShapePiece> Pieces { get; }
     IShapeBuilder StartPoint(int row, int col);
-    ISoftBody MakeShape(params (int row, int col)[] shapeCoords);
+    List<ShapePiece> MakeShape((int row, int col)[] template);
 }
 
 internal class ShapeBuilder : IShapeBuilder
@@ -19,17 +18,18 @@ internal class ShapeBuilder : IShapeBuilder
     private readonly Dictionary<Vector, IMassPoint> _massPoints;
     private readonly HashSet<(IMassPoint, IMassPoint)> _springs;
     private readonly IPhysicsWorld _physicsWorld;
+    private readonly IShapePieceCoordsFactory _shapePieceCoordsFactory;
     private int _startRow, _startCol;
     private ISoftBodyEditor? _softBodyEditor;
 
-    public List<ShapePiece> Pieces { get; }
-
-    public ShapeBuilder(IPhysicsWorld physicsWorld)
+    public ShapeBuilder(
+        IPhysicsWorld physicsWorld,
+        IShapePieceCoordsFactory shapePieceCoordsFactory)
     {
         _physicsWorld = physicsWorld;
+        _shapePieceCoordsFactory = shapePieceCoordsFactory;
         _massPoints = new Dictionary<Vector, IMassPoint>();
         _springs = new HashSet<(IMassPoint, IMassPoint)>();
-        Pieces = new List<ShapePiece>();
     }
 
     public IShapeBuilder StartPoint(int row, int col)
@@ -40,37 +40,38 @@ internal class ShapeBuilder : IShapeBuilder
         return this;
     }
 
-    public ISoftBody MakeShape(params (int row, int col)[] shapeCoords)
+    public List<ShapePiece> MakeShape((int row, int col)[] template)
     {
         _softBodyEditor = _physicsWorld.MakeSoftBodyEditor();
         _massPoints.Clear();
         _springs.Clear();
-        Pieces.Clear();
-        foreach (var (row, col) in shapeCoords)
+        var pieces = new List<ShapePiece>();
+        foreach (var (row, col) in template)
         {
-            MakePiece(row + _startRow, col + _startCol);
+            var piece = MakePiece(row + _startRow, col + _startCol);
+            pieces.Add(piece);
         }
         _softBodyEditor.Complete();
-        var body = _physicsWorld.GetSoftBodyByMassPoint(Pieces[0].Middle);
+        _physicsWorld.GetSoftBodyByMassPoint(pieces[0].Middle);
 
-        return body;
+        return pieces;
     }
 
-    private void MakePiece(int row, int col)
+    private ShapePiece MakePiece(int row, int col)
     {
-        var piece = GetPieceCoords(row, col);
+        var coords = _shapePieceCoordsFactory.GetPieceCoords(row, col);
 
-        var downLeft = GetMassPointOrCreateNew(piece.DownLeft);
-        var upLeft = GetMassPointOrCreateNew(piece.UpLeft);
-        var downRight = GetMassPointOrCreateNew(piece.DownRight);
-        var upRight = GetMassPointOrCreateNew(piece.UpRight);
-        var middleLeft = GetMassPointOrCreateNew(piece.MiddleLeft);
-        var middleUp = GetMassPointOrCreateNew(piece.MiddleUp);
-        var middleRight = GetMassPointOrCreateNew(piece.MiddleRight);
-        var middleDown = GetMassPointOrCreateNew(piece.MiddleDown);
-        var middle = GetMassPointOrCreateNew(piece.Middle);
+        var downLeft = GetMassPointOrCreateNew(coords.DownLeft);
+        var upLeft = GetMassPointOrCreateNew(coords.UpLeft);
+        var downRight = GetMassPointOrCreateNew(coords.DownRight);
+        var upRight = GetMassPointOrCreateNew(coords.UpRight);
+        var middleLeft = GetMassPointOrCreateNew(coords.MiddleLeft);
+        var middleUp = GetMassPointOrCreateNew(coords.MiddleUp);
+        var middleRight = GetMassPointOrCreateNew(coords.MiddleRight);
+        var middleDown = GetMassPointOrCreateNew(coords.MiddleDown);
+        var middle = GetMassPointOrCreateNew(coords.Middle);
 
-        Pieces.Add(new(
+        Join(
             downLeft,
             upLeft,
             downRight,
@@ -79,9 +80,9 @@ internal class ShapeBuilder : IShapeBuilder
             middleUp,
             middleRight,
             middleDown,
-            middle));
+            middle);
 
-        Join(
+        return new(
             downLeft,
             upLeft,
             downRight,
@@ -132,7 +133,7 @@ internal class ShapeBuilder : IShapeBuilder
 
     private void MakeSpringIfNotExist(IMassPoint a, IMassPoint b)
     {
-        if (!_springs.Contains((a, b)))
+        if (!_springs.Contains((a, b)) && !_springs.Contains((b, a)))
         {
             _softBodyEditor!.AddSpring(a, b);
             _springs.Add((a, b));
@@ -150,66 +151,5 @@ internal class ShapeBuilder : IShapeBuilder
         _massPoints.Add(position, newMassPoint);
 
         return newMassPoint;
-    }
-
-    private PieceCoords GetPieceCoords(int row, int col)
-    {
-        var downLeft = new Vector(GameConstants.PieceSize * col, GameConstants.PieceSize * row);
-        var upLeft = downLeft + new Vector(0, GameConstants.PieceSize);
-        var downRight = downLeft + new Vector(GameConstants.PieceSize, 0);
-        var upRight = downLeft + new Vector(GameConstants.PieceSize, GameConstants.PieceSize);
-
-        var middleLeft = downLeft + new Vector(0, GameConstants.PieceSizeHalf);
-        var middleUp = downLeft + new Vector(GameConstants.PieceSizeHalf, GameConstants.PieceSize);
-        var middleRight = downLeft + new Vector(GameConstants.PieceSize, GameConstants.PieceSizeHalf);
-        var middleDown = downLeft + new Vector(GameConstants.PieceSizeHalf, 0);
-
-        var middle = downLeft + new Vector(GameConstants.PieceSizeHalf, GameConstants.PieceSizeHalf);
-
-        return new(
-            downLeft,
-            upLeft,
-            downRight,
-            upRight,
-            middleLeft,
-            middleUp,
-            middleRight,
-            middleDown,
-            middle);
-    }
-
-    class PieceCoords
-    {
-        public readonly Vector DownLeft;
-        public readonly Vector UpLeft;
-        public readonly Vector DownRight;
-        public readonly Vector UpRight;
-        public readonly Vector MiddleLeft;
-        public readonly Vector MiddleUp;
-        public readonly Vector MiddleRight;
-        public readonly Vector MiddleDown;
-        public readonly Vector Middle;
-
-        public PieceCoords(
-            Vector downLeft,
-            Vector upLeft,
-            Vector downRight,
-            Vector upRight,
-            Vector middleLeft,
-            Vector middleUp,
-            Vector middleRight,
-            Vector middleDown,
-            Vector middle)
-        {
-            DownLeft = downLeft;
-            UpLeft = upLeft;
-            DownRight = downRight;
-            UpRight = upRight;
-            MiddleLeft = middleLeft;
-            MiddleUp = middleUp;
-            MiddleRight = middleRight;
-            MiddleDown = middleDown;
-            Middle = middle;
-        }
     }
 }

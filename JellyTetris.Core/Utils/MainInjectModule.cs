@@ -10,6 +10,8 @@ internal class MainInjectModule : InjectModule
     public override void Init(IBindingProvider bindingProvider)
     {
         bindingProvider.Bind<IPhysicsWorld>().ToMethod(_ => PhysicsWorldFactory.Make()).ToSingleton();
+        bindingProvider.Bind<IShapeTemplates, ShapeTemplates>().ToSingleton();
+        bindingProvider.Bind<IShapePieceCoordsFactory, ShapePieceCoordsFactory>().ToSingleton();
         bindingProvider.Bind<IShapeBuilder, ShapeBuilder>().ToSingleton();
         bindingProvider.Bind<IShapeFactory, ShapeFactory>().ToSingleton();
         bindingProvider.Bind<IShapeGenerator, ShapeGenerator>().ToSingleton();

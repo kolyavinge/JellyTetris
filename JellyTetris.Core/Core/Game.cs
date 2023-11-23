@@ -10,6 +10,7 @@ internal class Game : IGame
 {
     private readonly IPhysicsWorld _physicsWorld;
     private readonly IShapeGenerator _shapeGenerator;
+    private readonly ICurrentShapeContext _currentShapeContext;
     private readonly IShapeMovingLogic _shapeMovingLogic;
     private readonly IShapeRotationLogic _shapeRotationLogic;
     private readonly IShapeCollisionChecker _shapeCollisionChecker;
@@ -30,6 +31,7 @@ internal class Game : IGame
         IPhysicsWorld physicsWorld,
         IGameInitializer gameInitializer,
         IShapeGenerator shapeGenerator,
+        ICurrentShapeContext currentShapeContext,
         IShapeMovingLogic shapeMovingLogic,
         IShapeRotationLogic shapeRotationLogic,
         IShapeCollisionChecker shapeCollisionChecker,
@@ -37,12 +39,14 @@ internal class Game : IGame
     {
         _physicsWorld = physicsWorld;
         _shapeGenerator = shapeGenerator;
+        _currentShapeContext = currentShapeContext;
         _shapeMovingLogic = shapeMovingLogic;
         _shapeRotationLogic = shapeRotationLogic;
         _shapeCollisionChecker = shapeCollisionChecker;
         _lineEraseLogic = lineEraseLogic;
         gameInitializer.Init();
         _currentShape = _shapeGenerator.GetRandomShape();
+        _currentShapeContext.Init(_currentShape);
         //NextShape = _shapeGenerator.GetRandomShape();
         _shapes = new List<Shape> { _currentShape };
         State = GameState.Default;
@@ -52,7 +56,7 @@ internal class Game : IGame
     {
         if (State == GameState.Default)
         {
-            _currentShape.ForAllPoints(p => p.Velocity = new(0, -5));
+            _currentShapeContext.ForAllPoints(p => p.Velocity = new(0, -5));
         }
         else if (State == GameState.DropShape)
         {
@@ -60,6 +64,7 @@ internal class Game : IGame
             {
                 _lineEraseLogic.EraseLineIfNeeded(_shapes);
                 _currentShape = _shapeGenerator.GetRandomShape();
+                _currentShapeContext.Init(_currentShape);
                 _shapes.Add(_currentShape);
                 State = GameState.Default;
             }
@@ -105,7 +110,7 @@ internal class Game : IGame
     {
         if (State == GameState.Default)
         {
-            _currentShape.ForAllPoints(p => p.Velocity = new(0, -10));
+            _currentShapeContext.ForAllPoints(p => p.Velocity = new(0, -10));
             State = GameState.DropShape;
             _dropShapeTimestamp = DateTime.Now;
         }
@@ -121,6 +126,6 @@ internal class Game : IGame
 
     private bool IsOver()
     {
-        return _shapes.SelectMany(x => x.SoftBody.MassPoints).Max(x => x.Position.Y) > GameConstants.FieldHeight * GameConstants.PieceSize;
+        return _physicsWorld.SoftBodies.SelectMany(x => x.MassPoints).Max(x => x.Position.Y) > GameConstants.FieldHeight * GameConstants.PieceSize;
     }
 }

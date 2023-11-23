@@ -19,6 +19,7 @@ internal class MainInjectModule : InjectModule
         bindingProvider.Bind<IShapeRotationLogic, ShapeRotationLogic>().ToSingleton();
         bindingProvider.Bind<IShapeCollisionChecker, ShapeCollisionChecker>().ToSingleton();
         bindingProvider.Bind<ILineEraseLogic, LineEraseLogic>().ToSingleton();
+        bindingProvider.Bind<ICurrentShapeContext, CurrentShapeContext>().ToSingleton();
         bindingProvider.Bind<IGameInitializer, GameInitializer>().ToSingleton();
         bindingProvider.Bind<IGame, Game>().ToSingleton();
     }

@@ -12,10 +12,14 @@ internal interface IShapeMovingLogic
 
 internal class ShapeMovingLogic : IShapeMovingLogic
 {
+    private readonly ICurrentShapeContext _currentShapeContext;
     private readonly IShapeCollisionChecker _shapeCollisionChecker;
 
-    public ShapeMovingLogic(IShapeCollisionChecker shapeCollisionChecker)
+    public ShapeMovingLogic(
+        ICurrentShapeContext currentShapeContext,
+        IShapeCollisionChecker shapeCollisionChecker)
     {
+        _currentShapeContext = currentShapeContext;
         _shapeCollisionChecker = shapeCollisionChecker;
     }
 
@@ -37,7 +41,7 @@ internal class ShapeMovingLogic : IShapeMovingLogic
 
     private bool Move(Shape shape, float step)
     {
-        var points = shape.SoftBody.MassPoints
+        var points = _currentShapeContext.SoftBody!.MassPoints
             .Select(x => new MovedPoint(x, new(x.Position.X + 2.0f * step, x.Position.Y)))
             .ToList();
 

@@ -28,15 +28,19 @@ internal interface IShapeCollisionChecker
 internal class ShapeCollisionChecker : IShapeCollisionChecker
 {
     private readonly IPhysicsWorld _physicsWorld;
+    private readonly ICurrentShapeContext _currentShapeContext;
 
-    public ShapeCollisionChecker(IPhysicsWorld physicsWorld)
+    public ShapeCollisionChecker(
+        IPhysicsWorld physicsWorld,
+        ICurrentShapeContext currentShapeContext)
     {
         _physicsWorld = physicsWorld;
+        _currentShapeContext = currentShapeContext;
     }
 
     public bool IsShapeCollided(Shape shape)
     {
-        return _physicsWorld.IsCollidedToAnySoftBody(shape.SoftBody) || _physicsWorld.IsCollidedToAnyHardBody(shape.SoftBody);
+        return _physicsWorld.IsCollidedToAnySoftBody(_currentShapeContext.SoftBody!) || _physicsWorld.IsCollidedToAnyHardBody(_currentShapeContext.SoftBody!);
     }
 
     public bool AreMovedPointsCollided(Shape shape, IReadOnlyCollection<MovedPoint> points)
@@ -59,7 +63,7 @@ internal class ShapeCollisionChecker : IShapeCollisionChecker
         foreach (var point in points)
         {
             var result = _physicsWorld.GetSoftBodyByPosition(point.MovedPosition).ToArray();
-            var noCollision = result.Length == 0 || (result.Length == 1 && result[0] == shape.SoftBody);
+            var noCollision = result.Length == 0 || (result.Length == 1 && result[0] == _currentShapeContext.SoftBody!);
             if (!noCollision) return true;
         }
 

@@ -47,48 +47,48 @@ internal class ShapeFactory : IShapeFactory
     {
         var body = _shapeBuilder.StartPoint(GameConstants.FieldHeight, 4).MakeShape((0, 0), (0, 1), (1, 1), (1, 0));
 
-        return new(ShapeKind.Cube, body, _shapeBuilder.Pieces, _shapePartBuilder.GetParts(_shapeBuilder.Pieces));
+        return new(ShapeKind.Cube, _shapeBuilder.Pieces, _shapePartBuilder.GetParts(_shapeBuilder.Pieces));
     }
 
     public Shape MakeLine()
     {
         var body = _shapeBuilder.StartPoint(GameConstants.FieldHeight, 4).MakeShape((0, 0), (1, 0), (2, 0), (3, 0));
 
-        return new(ShapeKind.Line, body, _shapeBuilder.Pieces, _shapePartBuilder.GetParts(_shapeBuilder.Pieces));
+        return new(ShapeKind.Line, _shapeBuilder.Pieces, _shapePartBuilder.GetParts(_shapeBuilder.Pieces));
     }
 
     public Shape MakeT()
     {
         var body = _shapeBuilder.StartPoint(GameConstants.FieldHeight, 4).MakeShape((0, 0), (0, 1), (0, 2), (1, 1));
 
-        return new(ShapeKind.T, body, _shapeBuilder.Pieces, _shapePartBuilder.GetParts(_shapeBuilder.Pieces));
+        return new(ShapeKind.T, _shapeBuilder.Pieces, _shapePartBuilder.GetParts(_shapeBuilder.Pieces));
     }
 
     public Shape MakeL1()
     {
         var body = _shapeBuilder.StartPoint(GameConstants.FieldHeight, 4).MakeShape((2, 0), (1, 0), (0, 0), (0, 1));
 
-        return new(ShapeKind.L1, body, _shapeBuilder.Pieces, _shapePartBuilder.GetParts(_shapeBuilder.Pieces));
+        return new(ShapeKind.L1, _shapeBuilder.Pieces, _shapePartBuilder.GetParts(_shapeBuilder.Pieces));
     }
 
     public Shape MakeL2()
     {
         var body = _shapeBuilder.StartPoint(GameConstants.FieldHeight, 4).MakeShape((2, 1), (1, 1), (0, 1), (0, 0));
 
-        return new(ShapeKind.L2, body, _shapeBuilder.Pieces, _shapePartBuilder.GetParts(_shapeBuilder.Pieces));
+        return new(ShapeKind.L2, _shapeBuilder.Pieces, _shapePartBuilder.GetParts(_shapeBuilder.Pieces));
     }
 
     public Shape MakeS1()
     {
         var body = _shapeBuilder.StartPoint(GameConstants.FieldHeight, 4).MakeShape((2, 0), (1, 0), (1, 1), (0, 1));
 
-        return new(ShapeKind.S1, body, _shapeBuilder.Pieces, _shapePartBuilder.GetParts(_shapeBuilder.Pieces));
+        return new(ShapeKind.S1, _shapeBuilder.Pieces, _shapePartBuilder.GetParts(_shapeBuilder.Pieces));
     }
 
     public Shape MakeS2()
     {
         var body = _shapeBuilder.StartPoint(GameConstants.FieldHeight, 4).MakeShape((2, 1), (1, 1), (1, 0), (0, 0));
 
-        return new(ShapeKind.S2, body, _shapeBuilder.Pieces, _shapePartBuilder.GetParts(_shapeBuilder.Pieces));
+        return new(ShapeKind.S2, _shapeBuilder.Pieces, _shapePartBuilder.GetParts(_shapeBuilder.Pieces));
     }
 }

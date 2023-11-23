@@ -10,6 +10,8 @@ public static class GameFactory
         var container = DependencyContainerFactory.MakeLiteContainer();
         container.InitFromModules(new MainInjectModule());
 
+        container.Resolve<IGameInitializer>().Init();
+
         return container.Resolve<IGame>();
     }
 }

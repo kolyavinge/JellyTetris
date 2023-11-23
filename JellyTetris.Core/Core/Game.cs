@@ -29,7 +29,6 @@ internal class Game : IGame
 
     public Game(
         IPhysicsWorld physicsWorld,
-        IGameInitializer gameInitializer,
         IShapeGenerator shapeGenerator,
         ICurrentShapeContext currentShapeContext,
         IShapeMovingLogic shapeMovingLogic,
@@ -44,7 +43,6 @@ internal class Game : IGame
         _shapeRotationLogic = shapeRotationLogic;
         _shapeCollisionChecker = shapeCollisionChecker;
         _lineEraseLogic = lineEraseLogic;
-        gameInitializer.Init();
         _currentShape = _shapeGenerator.GetCurrentShape();
         _currentShapeContext.Init(_currentShape);
         _shapes = new List<Shape> { _currentShape };

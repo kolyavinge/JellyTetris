@@ -16,6 +16,7 @@ public partial class MainWindow : Window
         InitializeComponent();
         _game = GameFactory.Make();
         _fieldGrid.Game = _game;
+        _nextShapeGrid.Game = _game;
         _timer = new DispatcherTimer(DispatcherPriority.Render);
         _timer.Interval = TimeSpan.FromMilliseconds(10);
         _timer.Tick += OnGameUpdate;
@@ -37,10 +38,12 @@ public partial class MainWindow : Window
             ModelingTextBlock.Text = "";
         }
         _fieldGrid.InvalidateVisual();
+        _nextShapeGrid.InvalidateVisual();
 #endif
 #if RELEASE
         _game.Update();
         _fieldGrid.InvalidateVisual();
+        _nextShapeGrid.InvalidateVisual();
 #endif
     }
 

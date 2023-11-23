@@ -9,6 +9,7 @@ namespace JellyTetris.Core;
 internal class Game : IGame
 {
     private readonly IPhysicsWorld _physicsWorld;
+    private readonly IShapeTemplates _shapeTemplates;
     private readonly IShapeGenerator _shapeGenerator;
     private readonly ICurrentShapeContext _currentShapeContext;
     private readonly IShapeMovingLogic _shapeMovingLogic;
@@ -29,6 +30,7 @@ internal class Game : IGame
 
     public Game(
         IPhysicsWorld physicsWorld,
+        IShapeTemplates shapeTemplates,
         IShapeGenerator shapeGenerator,
         ICurrentShapeContext currentShapeContext,
         IShapeMovingLogic shapeMovingLogic,
@@ -37,6 +39,7 @@ internal class Game : IGame
         ILineEraseLogic lineEraseLogic)
     {
         _physicsWorld = physicsWorld;
+        _shapeTemplates = shapeTemplates;
         _shapeGenerator = shapeGenerator;
         _currentShapeContext = currentShapeContext;
         _shapeMovingLogic = shapeMovingLogic;
@@ -119,6 +122,11 @@ internal class Game : IGame
         {
             _shapeRotationLogic.Rotate(_currentShape);
         }
+    }
+
+    public (int row, int col)[] GetShapeTemplateFor(ShapeKind shapeKind)
+    {
+        return _shapeTemplates.GetTemplateFor(shapeKind);
     }
 
     private bool IsOver()

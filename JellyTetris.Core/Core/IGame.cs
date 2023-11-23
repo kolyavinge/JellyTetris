@@ -22,4 +22,6 @@ public interface IGame
     void DropCurrentShape();
 
     void RotateCurrentShape();
+
+    (int row, int col)[] GetShapeTemplateFor(ShapeKind shapeKind);
 }

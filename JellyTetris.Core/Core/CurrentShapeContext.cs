@@ -42,6 +42,7 @@ internal class CurrentShapeContext : ICurrentShapeContext
         SoftBody = shape.Parts.First().SoftBody;
         InitMassPoints = SoftBody.MassPoints.Select(mp => new InitMassPointPosition(mp)).ToArray();
         InitMiddlePoint = SoftBody.MiddlePoint.Clone();
+        CurrentAngle = 0;
     }
 
     public void ForAllPoints(Action<IMassPoint> action)

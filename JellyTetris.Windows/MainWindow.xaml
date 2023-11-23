@@ -12,7 +12,22 @@
         Width="1000"
         KeyDown="OnKeyDown">
     <Grid>
-        <TextBlock x:Name="ModelingTextBlock" Foreground="Red" HorizontalAlignment="Left" VerticalAlignment="Top" />
-        <local:FieldGrid x:Name="_fieldGrid" Background="#181b1c" />
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="400" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="0" x:Name="ModelingTextBlock" Foreground="Red" HorizontalAlignment="Left" VerticalAlignment="Top" />
+
+        <local:FieldGrid Grid.Row="1" Grid.Column="1" x:Name="_fieldGrid" Background="#181b1c" />
+
+        <local:NextShapeGrid Grid.Row="1" Grid.Column="2" x:Name="_nextShapeGrid" Width="120" HorizontalAlignment="Left" Margin="20,0,0,0" />
     </Grid>
 </Window>

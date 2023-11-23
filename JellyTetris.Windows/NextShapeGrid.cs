@@ -5,24 +5,15 @@ using JellyTetris.Windows.Rendering;
 
 namespace JellyTetris.Windows;
 
-internal class FieldGrid : Grid
+internal class NextShapeGrid : Grid
 {
-    private readonly IRenderLogic _renderLogic;
+    private readonly NextShapeRenderLogic _renderLogic = new NextShapeRenderLogic();
 
     public IGame? Game { get; set; }
-
-    public FieldGrid()
-    {
-        _renderLogic = new RenderLogic();
-        //_renderLogic = new DebugRenderLogic();
-        Width = GameConstants.FieldWidth * GameConstants.PieceSize;
-        Height = GameConstants.FieldHeight * GameConstants.PieceSize;
-    }
 
     protected override void OnRender(DrawingContext dc)
     {
         if (Game is null) return;
-        base.OnRender(dc);
         _renderLogic.Render(dc, Game!, ActualWidth, ActualHeight);
     }
 }

@@ -23,7 +23,7 @@ internal class Game : IGame
 
     public IShape CurrentShape => _currentShape;
 
-    public IShape NextShape { get; private set; }
+    public ShapeKind NextShapeKind => _shapeGenerator.NextShapeKind;
 
     public IReadOnlyCollection<IShape> Shapes => _shapes;
 
@@ -45,9 +45,8 @@ internal class Game : IGame
         _shapeCollisionChecker = shapeCollisionChecker;
         _lineEraseLogic = lineEraseLogic;
         gameInitializer.Init();
-        _currentShape = _shapeGenerator.GetRandomShape();
+        _currentShape = _shapeGenerator.GetCurrentShape();
         _currentShapeContext.Init(_currentShape);
-        //NextShape = _shapeGenerator.GetRandomShape();
         _shapes = new List<Shape> { _currentShape };
         State = GameState.Default;
     }
@@ -63,7 +62,7 @@ internal class Game : IGame
             if ((DateTime.Now - _dropShapeTimestamp).TotalSeconds >= 2)
             {
                 _lineEraseLogic.EraseLineIfNeeded(_shapes);
-                _currentShape = _shapeGenerator.GetRandomShape();
+                _currentShape = _shapeGenerator.GetCurrentShape();
                 _currentShapeContext.Init(_currentShape);
                 _shapes.Add(_currentShape);
                 State = GameState.Default;

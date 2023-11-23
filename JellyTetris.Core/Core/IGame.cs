@@ -9,7 +9,7 @@ public interface IGame
 
     IShape CurrentShape { get; }
 
-    IShape NextShape { get; }
+    ShapeKind NextShapeKind { get; }
 
     IReadOnlyCollection<IShape> Shapes { get; }
 
